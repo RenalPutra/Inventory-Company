@@ -1,9 +1,11 @@
-
 from django.contrib import admin
-from django.urls import path
-from .views import dashboard
+from django.urls import path, include
+from .views import *
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", dashboard, name="dashboard"),
+    path("", welcome, name="welcome"),
+    path("dashboard/", include("gudang.urls")),
+
 ]
