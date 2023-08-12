@@ -15,30 +15,30 @@
                     <div class="fields">
                         <div class="input-field">
                             <label>Device</label>
-                            <input type="text" placeholder="Enter your IP" name="device">
+                            <input type="text" placeholder="Enter your IP" name="device" value="{{item_value.device}}">
                         </div>
 
                         <div class="input-field">
                             <label>User</label>
-                            <input type="text" placeholder="Enter your user" name="user">
+                            <input type="text" placeholder="Enter your user" name="user" value="{{item_value.user}}">
                         </div>
 
                         <div class="input-field">
                             <label>Email</label>
-                            <input type="text" placeholder="Enter your email" name="email">
+                            <input type="text" placeholder="Enter your email" name="email" value="{{item_value.email}}">
                         </div>
 
                         <div class="input-field">
                             <label>PC/Laptop</label>
-                            <input type="text" placeholder="Enter your Device " name="pc">
+                            <input type="text" placeholder="Enter your Device " name="pc" value="{{item_value.pc}}">
                         </div>
 
                         <div class="input-field">
                             <label>Operating System</label>
-                            <input type="text" placeholder="Enter your OS " name="os">
+                            <input type="text" placeholder="Enter your OS " name="os" value="{{item_value.os}}">
                         </div>
 
-                        {% comment %} <div class="input-field">
+                    <!-- <div class="input-field">
                             <label>Operating System</label>
                             <select required>
                                 <option disabled selected>Select gender</option>
@@ -46,58 +46,64 @@
                                 <option>Female</option>
                                 <option>Others</option>
                             </select>
-                        </div> {% endcomment %}
+                        </div>-->
 
                         <div class="input-field">
                             <label>CPU</label>
-                            <input type="text" placeholder="Enter CPU type" name="cpu">
+                            <input type="text" placeholder="Enter CPU type" name="cpu" value="{{item_value.cpu}}">
                         </div>
                     </div>
                 </div>
 
-                <div class="details ID">
-                    {% comment %} <span class="title">Identity Details</span> {% endcomment %}
+                <!-- <div class="details ID">
+                    {% comment %} <span class="title">Identity Details</span> {% endcomment %} -->
 
                     <div class="fields">
                         <div class="input-field">
                             <label>VGA</label>
-                            <input type="text" placeholder="Enter VGA type" name="vga">
+                            <input type="text" placeholder="Enter VGA type" name="vga" value="{{item_value.vga}}">
                         </div>
 
                         <div class="input-field">
                             <label>RAM</label>
-                            <input type="text" placeholder="Enter RAM type" name="ram">
+                            <input type="text" placeholder="Enter RAM type" name="ram" value="{{item_value.ram}}">
                         </div>
 
                         <div class="input-field">
                             <label>Model</label>
-                            <input type="text" placeholder="Enter your model" name="model">
+                            <input type="text" placeholder="Enter your model" name="model" value="{{item_value.model}}">
                         </div>
 
                         <div class="input-field">
                             <label>Serial Number</label>
-                            <input type="text" placeholder="Enter serial number" name="serialnumber">
+                            <input type="text" placeholder="Enter serial number" name="serialnumber" value="{{item_value.serialnumber}}">
                         </div>
 
                         <div class="input-field">
                             <label>Description</label>
-                            <input type="text" placeholder="Enter Description" name="description">
+                            <input type="text" placeholder="Enter Description" name="description" value="{{item_value.description}}">
                         </div>
 
                         <div class="input-field">
                             <label>Kategory</label>
                             <select required name="kategori" placeholder="Enter kategory">
+                                {% if item_value.kategori == null %}
                                 <option disabled selected required>Select kategory</option>
+                                {% endif %}
                                 {% for k in kategori %}
+                                {% if  item_value.kategori == k %}
+                                <option value="{{item_value.kategori}}">{{item_value.kategori}}</option>
+                                {% else %}
                                 <option value="{{k.kategori}}">{{k.kategori}}</option>
+                                {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
                     </div>
 
-                    <button class="sumbit">
+                    <button class="submit" type="submit">
                         <span class="btnText">Submit</span>
-                        <i class="uil uil-navigator"></i>
+                       
                     </button>
                 </div> 
             </div>

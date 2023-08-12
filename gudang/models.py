@@ -33,5 +33,4 @@ class BarangMasuk(models.Model):
     def __str__(self):
         return self.device + " - " + self.user + " - " + self.email + " - " + self.pc + " - " + self.os + " - " + self.cpu + " - " + self.vga + " - " + self.ram + " - " + self.model + " - " + self.serialnumber + " - " + self.description + " - " + str(self.kategori)
 
-    class Meta:
-        verbose_name_plural = "barang masuk"
+
