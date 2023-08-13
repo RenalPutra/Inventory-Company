@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="sweetalert2.min.css">
 <body>
     <div class="container">
-        <header>Barang Masuk</header>
+        <header>Barang Keluar</header>
 
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
@@ -16,104 +16,85 @@
                     <div class="fields">
                         <div class="input-field">
                             <label>Device</label>
-                            <input type="text" placeholder="Enter your IP" name="device" value="{{item_value.device}}">
+                            <input type="text" placeholder="Enter your IP" name="device" value="{{ form_data.device }}">
                         </div>
 
                         <div class="input-field">
                             <label>User</label>
-                            <input type="text" placeholder="Enter your user" name="user" value="{{item_value.user}}">
+                            <input type="text" placeholder="Enter your user" name="user" value="{{ form_data.user }}">
                         </div>
 
                         <div class="input-field">
                             <label>Email</label>
-                            <input type="text" placeholder="Enter your email" name="email" value="{{item_value.email}}">
+                            <input type="text" placeholder="Enter your email" name="email" value="{{ form_data.email }}">
                         </div>
 
                         <div class="input-field">
                             <label>PC/Laptop</label>
-                            <input type="text" placeholder="Enter your Device " name="pc" value="{{item_value.pc}}">
+                            <input type="text" placeholder="Enter your Device" name="pc" value="{{ form_data.pc }}">
                         </div>
 
                         <div class="input-field">
                             <label>Operating System</label>
-                            <input type="text" placeholder="Enter your OS " name="os" value="{{item_value.os}}">
+                            <input type="text" placeholder="Enter your OS" name="os" value="{{ form_data.os }}">
                         </div>
-
-                    <!-- <div class="input-field">
-                            <label>Operating System</label>
-                            <select required>
-                                <option disabled selected>Select gender</option>
-                                <option>Male</option>
-                                <option>Female</option>
-                                <option>Others</option>
-                            </select>
-                        </div>-->
 
                         <div class="input-field">
                             <label>CPU</label>
-                            <input type="text" placeholder="Enter CPU type" name="cpu" value="{{item_value.cpu}}">
+                            <input type="text" placeholder="Enter CPU type" name="cpu" value="{{ form_data.cpu }}">
                         </div>
                     </div>
                 </div>
 
-                <!-- <div class="details ID">
-                    {% comment %} <span class="title">Identity Details</span> {% endcomment %} -->
-
+                <div class="details ID">
                     <div class="fields">
                         <div class="input-field">
                             <label>VGA</label>
-                            <input type="text" placeholder="Enter VGA type" name="vga" value="{{item_value.vga}}">
+                            <input type="text" placeholder="Enter VGA type" name="vga" value="{{ form_data.vga }}">
                         </div>
 
                         <div class="input-field">
                             <label>RAM</label>
-                            <input type="text" placeholder="Enter RAM type" name="ram" value="{{item_value.ram}}">
+                            <input type="text" placeholder="Enter RAM type" name="ram" value="{{ form_data.ram }}">
                         </div>
 
                         <div class="input-field">
                             <label>Model</label>
-                            <input type="text" placeholder="Enter your model" name="model" value="{{item_value.model}}">
+                            <input type="text" placeholder="Enter your model" name="model" value="{{ form_data.model }}">
                         </div>
 
                         <div class="input-field">
                             <label>Serial Number</label>
-                            <input type="text" placeholder="Enter serial number" name="serialnumber" value="{{item_value.serialnumber}}">
+                            <input type="text" placeholder="Enter serial number" name="serialnumber" value="{{ form_data.serialnumber }}">
                         </div>
 
                         <div class="input-field">
                             <label>Description</label>
-                            <input type="text" placeholder="Enter Description" name="description" value="{{item_value.description}}">
+                            <input type="text" placeholder="Enter Description" name="description" value="{{ form_data.description }}">
                         </div>
-
                         <div class="input-field">
-                            <label>Kategory</label>
-                            <select required name="kategori" placeholder="Enter kategory">
-                                {% if item_value.kategori == null %}
-                                <option disabled selected required>Select kategory</option>
-                                {% endif %}
+                            <label>Kategori</label>
+                            <select required name="kategori">
+                                <option disabled selected required>Select kategori</option>
                                 {% for k in kategori %}
-                                {% if  item_value.kategori == k %}
-                                <option value="{{item_value.kategori}}">{{item_value.kategori}}</option>
-                                {% else %}
-                                <option value="{{k.kategori}}">{{k.kategori}}</option>
-                                {% endif %}
+                                    {% if form_data.kategori == k.kategori %}
+                                        <option value="{{ k.id }}" selected>{{ k.kategori }}</option>
+                                    {% else %}
+                                        <option value="{{ k.id }}">{{ k.kategori }}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
                     </div>
 
-                    <button class="submit" type="submit">
+                    <button class="submit" type="submit" name="submit_form" value="submit">
                         <span class="btnText">Submit</span>
-                       
                     </button>
-                </div> 
-            </div>
-                       
-                    </div>
                 </div> 
             </div>
         </form>
     </div>
+
     {% for msg in messages%}
     {% if msg.tags == 'error' %}
     <script>
@@ -135,8 +116,6 @@
     {% endfor %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="sweetalert2.min.js"></script>
-
-    <script src="script.js"></script>
 </body>
 </html>
 {% endblock content %}

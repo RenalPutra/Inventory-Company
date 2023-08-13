@@ -16,5 +16,13 @@ class BarangMasukAdmin(admin.ModelAdmin):
                    'vga', 'ram', 'model', 'serialnumber', 'description', 'kategori',)
 
 
+class BarangKeluarAdmin(admin.ModelAdmin):
+    list_display = ['date', 'device', 'user', 'email', 'pc', 'os', 'cpu',
+                    'vga', 'ram', 'model', 'serialnumber', 'description', 'kategori',]
+    list_filter = ('date', 'device', 'user', 'email', 'pc', 'os', 'cpu',
+                   'vga', 'ram', 'model', 'serialnumber', 'description', 'kategori',)
+
+
 admin.site.register(Kategori, KategoriAdmin)
 admin.site.register(BarangMasuk, BarangMasukAdmin)
+admin.site.register(BarangKeluar, BarangKeluarAdmin)

@@ -1,5 +1,9 @@
+from .models import Kategori, BarangKeluar
+from django.contrib import messages
+from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from .models import *
 # Create your views here.
@@ -27,26 +31,117 @@ def barangmasuk(request):
         serialnumber = request.POST.get('serialnumber')
         description = request.POST.get('description')
         kategori = request.POST.get('kategori')
-        kat = Kategori.objects.get(kategori=kategori)
-        BarangMasuk.objects.create(
-            device=device,
-            user=user,
-            email=email,
-            pc=pc,
-            os=os,
-            cpu=cpu,
-            vga=vga,
-            ram=ram,
-            model=model,
-            serialnumber=serialnumber,
-            description=description,
-            kategori=kat
-        )
+        # jika data kategori tidak ada maka akan muncul pesan error
+
+        if not kategori:
+            messages.error(
+                request, 'Kategori tidak boleh kosong')
+            return redirect('barangmasuk')
+        else:
+            kat = Kategori.objects.get(kategori=kategori)
+            BarangMasuk.objects.create(
+                device=device,
+                user=user,
+                email=email,
+                pc=pc,
+                os=os,
+                cpu=cpu,
+                vga=vga,
+                ram=ram,
+                model=model,
+                serialnumber=serialnumber,
+                description=description,
+                kategori=kat
+            )
+            messages.success(
+                request, 'Data berhasil disimpan')
 
     context = {
         'kategori': kategori,
     }
     return render(request, template_name, context)
+
+# jika barang keluar user hanya perlu mengisi Device saja
+# dan data lainnya akan otomatis terisi
+# jika device tidak ada maka akan muncul pesan error
+
+
+def barangkeluar(request):
+    template_name = "formbarangkeluar.html"
+    kategori = Kategori.objects.all()
+
+    if request.method == 'POST':
+        device = request.POST.get('device')
+        existing_barang = BarangMasuk.objects.filter(device=device).first()
+
+        if existing_barang:
+            if 'submit_form' in request.POST:
+                # Jika tombol "Submit" ditekan, simpan data ke BarangKeluar
+                form_data = {
+                    'device': existing_barang.device,
+                    'user': existing_barang.user,
+                    'email': existing_barang.email,
+                    'pc': existing_barang.pc,
+                    'os': existing_barang.os,
+                    'cpu': existing_barang.cpu,
+                    'vga': existing_barang.vga,
+                    'ram': existing_barang.ram,
+                    'model': existing_barang.model,
+                    'serialnumber': existing_barang.serialnumber,
+                    'description': existing_barang.description,
+                    'kategori': existing_barang.kategori.kategori,
+                }
+                kat = Kategori.objects.get(
+                    kategori=existing_barang.kategori.kategori)
+                # Simpan data ke BarangKeluar
+                BarangKeluar.objects.create(
+                    device=device,
+                    user=existing_barang.user,
+                    email=existing_barang.email,
+                    pc=existing_barang.pc,
+                    os=existing_barang.os,
+                    cpu=existing_barang.cpu,
+                    vga=existing_barang.vga,
+                    ram=existing_barang.ram,
+                    model=existing_barang.model,
+                    serialnumber=existing_barang.serialnumber,
+                    description=existing_barang.description,
+                    kategori=kat
+                )
+                with transaction.atomic():
+                    existing_barang.delete()
+
+                messages.success(
+                    request, 'Data berhasil disimpan ke BarangKeluar dan dihapus dari BarangMasuk.')
+                return redirect('barangkeluar')  # Ubah ke URL yang sesuai
+
+        else:
+            messages.error(request, 'Device belum terdaftar.')
+
+    form_data = {
+        'device': '',
+        'user': '',
+        'email': '',
+        'pc': '',
+        'os': '',
+        'cpu': '',
+        'vga': '',
+        'ram': '',
+        'model': '',
+        'serialnumber': '',
+        'description': '',
+        'kategori': '',
+    }
+
+    form = {
+        'form_data': form_data,
+        'kategori': kategori,
+    }
+
+    context = {
+        'kategori': kategori,
+    }
+    return render(request, template_name, context,)
 
 
 def editBarangMasuk(request, id):
@@ -100,7 +195,7 @@ def deleteBarangMasuk(request, id):
 
 
 def tbdatabarang(request):
-    
+
     global results
     results = None
     template_name = "tbdatabarang.html"
@@ -108,32 +203,27 @@ def tbdatabarang(request):
     kategori = Kategori.objects.all()
     get_kategori = str(request.POST.get('kategori'))
     get_search = request.POST.get('search')
-    search_category = BarangMasuk.objects.filter(kategori__kategori__contains=get_kategori)
+    search_category = BarangMasuk.objects.filter(
+        kategori__kategori__contains=get_kategori)
     if get_search:
 
-        queries = Q(device__icontains=get_search) | Q(user__icontains=get_search) | Q(email__icontains=get_search) | Q(pc__icontains=get_search) | Q(os__icontains=get_search) |  Q(cpu__icontains=get_search) | Q(vga__icontains=get_search) | Q(ram__icontains=get_search) | Q(model__icontains=get_search) | Q(serialnumber__icontains=get_search) | Q(description__icontains=get_search)
-        
-        results = BarangMasuk.objects.filter(queries)
-        
-    elif get_kategori:
-        results = BarangMasuk.objects.filter(kategori__kategori__contains=get_kategori)
+        queries = Q(device__icontains=get_search) | Q(user__icontains=get_search) | Q(email__icontains=get_search) | Q(pc__icontains=get_search) | Q(os__icontains=get_search) | Q(
+            cpu__icontains=get_search) | Q(vga__icontains=get_search) | Q(ram__icontains=get_search) | Q(model__icontains=get_search) | Q(serialnumber__icontains=get_search) | Q(description__icontains=get_search)
 
-        
-    
-    
+        results = BarangMasuk.objects.filter(queries)
+
+    elif get_kategori:
+        results = BarangMasuk.objects.filter(
+            kategori__kategori__contains=get_kategori)
+
     context = {
         'barang': barang,
         'kategori': kategori,
-        's_kategori' : search_category,
-        'get_kategori' : get_kategori,
-        'get_search' :get_search,
-        'results': results, 
-    
-    }
-   
-    
-  
-    
+        's_kategori': search_category,
+        'get_kategori': get_kategori,
+        'get_search': get_search,
+        'results': results,
 
+    }
 
     return render(request, template_name, context)

@@ -7,6 +7,7 @@ const sidebarClose = document.querySelector(".collapse_sidebar");
 const sidebarExpand = document.querySelector(".expand_sidebar");
 sidebarOpen.addEventListener("click", () => sidebar.classList.toggle("close"));
 
+
 sidebarClose.addEventListener("click", () => {
   sidebar.classList.add("close", "hoverable");
 });
@@ -51,3 +52,4 @@ if (window.innerWidth < 768) {
 } else {
   sidebar.classList.remove("close");
 }
+
