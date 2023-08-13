@@ -51,7 +51,7 @@
         <tr>
           <td>{{forloop.counter}}</td>
           <td>{{data.date}}</td>
-          <td>{{data.device}}</td>
+          <td>{{ data.device }}</td>
           <td>{{data.user}}</td>
           <td>{{data.email}}</td>
           <td>{{data.pc}}</td>
@@ -65,16 +65,10 @@
           <td>{{data.description}}</td>
           <td>
             <center>
-              <a
-                href="{% url 'edititem' data.id %}"
-                class="btn btn-warning btn-sm"
-                >Edit</a
-              >
-              <a
-                href="{% url 'deleteitem' data.id %}"
-                class="btn btn-danger btn-sm"
-                >Delete</a
-              >
+              <center>
+                <a href="{% url 'edititem' data.id %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'deleteitem' data.id %}" class="btn btn-danger btn-sm">Delete</a>
+            </center>
             </center>
           </td>
         </tr>
