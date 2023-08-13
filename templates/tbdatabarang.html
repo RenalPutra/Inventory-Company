@@ -12,16 +12,43 @@
   >
     <a href="{% url 'barangmasuk' %}" class="btn btn-success">Tambah</a>
   </button>
-  <div class="row g-3 align-item-center mt-2">
+  <div class="row g-3 align-item-center mt-2 mb-4">
     <div class="col-auto">
-      <form class="d-flex" role="search" action="#" method="#">
+      <form
+        class="d-flex"
+        role="search"
+        method="post"
+        action="{% url 'tbdatabarang' %}"
+      >
+        {% csrf_token %}
         <input
-          class="form-control me-2"
+          class="form-control me-2 py-2"
           type="search"
           name="search"
           placeholder="Search"
           aria-label="Search"
         />
+      </form>
+    </div>
+    <div class="col-auto">
+      <form
+        class="d-flex"
+        role="search"
+        method="post"
+        action="{% url 'tbdatabarang' %}"
+      >
+        {% csrf_token %}
+        <select
+          id="inputState"
+          class="form-control py-0 px-4 m-0"
+          name="kategori"
+          onchange="this.form.submit()"
+        >
+          <option selected>Search Category</option>
+          {% for d in kategori %}
+          <option value="{{d.kategori}}">{{d.kategori}}</option>
+          {% endfor %}
+        </select>
       </form>
     </div>
   </div>
@@ -46,6 +73,7 @@
           <td class="col-4"><center>Action</center></td>
         </tr>
       </thead>
+      {% if not results %}
       <tbody>
         {% for data in barang %}
         <tr>
@@ -66,14 +94,97 @@
           <td>
             <center>
               <center>
-                <a href="{% url 'edititem' data.id %}" class="btn btn-warning btn-sm">Edit</a>
-                <a href="{% url 'deleteitem' data.id %}" class="btn btn-danger btn-sm">Delete</a>
-            </center>
+                <a
+                  href="{% url 'edititem' data.id %}"
+                  class="btn btn-warning btn-sm"
+                  >Edit</a
+                >
+                <a
+                  href="{% url 'deleteitem' data.id %}"
+                  class="btn btn-danger btn-sm"
+                  >Delete</a
+                >
+              </center>
             </center>
           </td>
         </tr>
         {% endfor %}
       </tbody>
+      {% elif get_search != "None" %}
+      <tbody>
+        {% for data in results %}
+        <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{data.date}}</td>
+          <td>{{ data.device }}</td>
+          <td>{{data.user}}</td>
+          <td>{{data.email}}</td>
+          <td>{{data.pc}}</td>
+          <td>{{data.os}}</td>
+          <td>{{data.cpu}}</td>
+          <td>{{data.vga}}</td>
+          <td>{{data.ram}}</td>
+          <td>{{data.model}}</td>
+          <td>{{data.serialnumber}}</td>
+          <td>{{data.kategori}}</td>
+          <td>{{data.description}}</td>
+          <td>
+            <center>
+              <center>
+                <a
+                  href="{% url 'edititem' data.id %}"
+                  class="btn btn-warning btn-sm"
+                  >Edit</a
+                >
+                <a
+                  href="{% url 'deleteitem' data.id %}"
+                  class="btn btn-danger btn-sm"
+                  >Delete</a
+                >
+              </center>
+            </center>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      {% elif get_kategori != "None" %}
+      <tbody>
+        {% for data in results %}
+        <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{data.date}}</td>
+          <td>{{ data.device }}</td>
+          <td>{{data.user}}</td>
+          <td>{{data.email}}</td>
+          <td>{{data.pc}}</td>
+          <td>{{data.os}}</td>
+          <td>{{data.cpu}}</td>
+          <td>{{data.vga}}</td>
+          <td>{{data.ram}}</td>
+          <td>{{data.model}}</td>
+          <td>{{data.serialnumber}}</td>
+          <td>{{data.kategori}}</td>
+          <td>{{data.description}}</td>
+          <td>
+            <center>
+              <center>
+                <a
+                  href="{% url 'edititem' data.id %}"
+                  class="btn btn-warning btn-sm"
+                  >Edit</a
+                >
+                <a
+                  href="{% url 'deleteitem' data.id %}"
+                  class="btn btn-danger btn-sm"
+                  >Delete</a
+                >
+              </center>
+            </center>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      {% endif %}
     </table>
   </div>
 </div>

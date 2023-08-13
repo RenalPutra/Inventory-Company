@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from .models import *
 # Create your views here.
@@ -99,9 +100,40 @@ def deleteBarangMasuk(request, id):
 
 
 def tbdatabarang(request):
+    
+    global results
+    results = None
     template_name = "tbdatabarang.html"
     barang = BarangMasuk.objects.all()
+    kategori = Kategori.objects.all()
+    get_kategori = str(request.POST.get('kategori'))
+    get_search = request.POST.get('search')
+    search_category = BarangMasuk.objects.filter(kategori__kategori__contains=get_kategori)
+    if get_search:
+
+        queries = Q(device__icontains=get_search) | Q(user__icontains=get_search) | Q(email__icontains=get_search) | Q(pc__icontains=get_search) | Q(os__icontains=get_search) |  Q(cpu__icontains=get_search) | Q(vga__icontains=get_search) | Q(ram__icontains=get_search) | Q(model__icontains=get_search) | Q(serialnumber__icontains=get_search) | Q(description__icontains=get_search)
+        
+        results = BarangMasuk.objects.filter(queries)
+        
+    elif get_kategori:
+        results = BarangMasuk.objects.filter(kategori__kategori__contains=get_kategori)
+
+        
+    
+    
     context = {
         'barang': barang,
+        'kategori': kategori,
+        's_kategori' : search_category,
+        'get_kategori' : get_kategori,
+        'get_search' :get_search,
+        'results': results, 
+    
     }
+   
+    
+  
+    
+
+
     return render(request, template_name, context)
