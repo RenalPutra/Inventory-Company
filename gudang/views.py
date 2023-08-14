@@ -9,6 +9,48 @@ from .models import *
 # Create your views here.
 
 
+def analitic(request):
+    template_name = "analitic.html"
+
+    # Menghitung total data masuk dan data keluar
+    total_data_masuk = BarangMasuk.objects.count()
+    total_data_keluar = BarangKeluar.objects.count()
+
+    # Mengambil 5 recent activity data masuk dan data keluar terbaru
+    recent_activity_masuk = BarangMasuk.objects.order_by('-date')[:5]
+    recent_activity_keluar = BarangKeluar.objects.order_by('-date')[:5]
+
+    # Mengumpulkan data recent activity untuk ditampilkan di template
+    recent_activity = []
+    for activity in recent_activity_masuk:
+        recent_activity.append({
+            'device': activity.device,  # 'device' adalah nama field di model 'BarangMasuk
+            'name': activity.user,
+            'email': activity.email,
+            'joined': activity.date,
+            'type': 'Data Masuk',
+            'status': 'Liked'  # Anda dapat mengganti ini sesuai dengan kebutuhan
+        })
+    for activity in recent_activity_keluar:
+        recent_activity.append({
+            'device': activity.device,  # 'device' adalah nama field di model 'BarangKeluar
+            'name': activity.user,
+            'email': activity.email,
+            'joined': activity.date,
+            'type': 'Data Keluar',
+            'status': 'Liked'  # Anda dapat mengganti ini sesuai dengan kebutuhan
+        })
+
+    context = {
+        'total_data_masuk': total_data_masuk,
+        'total_data_keluar': total_data_keluar,
+        'count_new_recent_activity': len(recent_activity),
+        'recent_activity': recent_activity,
+    }
+
+    return render(request, template_name, context)
+
+
 def dashboard(request):
     template_name = "base.html"
 
