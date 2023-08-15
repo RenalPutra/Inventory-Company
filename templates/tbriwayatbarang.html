@@ -1,0 +1,170 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container-fluid px-5 col-2 rounded-1">
+  <h2 class="title text-dark">Data Barang</h2>
+  <br />
+  <!-- Button trigger modal -->
+
+  <div class="row g-3 align-item-center mt-2 mb-4">
+    <div class="col-auto">
+      <form
+        class="d-flex"
+        role="search"
+        method="post"
+        action="{% url 'riwayatdata' %}"
+      >
+        {% csrf_token %}
+        <input
+          class="form-control me-2 py-2"
+          type="search"
+          name="search"
+          placeholder="Search"
+          aria-label="Search"
+        />
+      </form>
+    </div>
+    <div class="col-auto">
+      <form
+        class="d-flex"
+        role="search"
+        method="post"
+        action="{% url 'riwayatdata' %}"
+      >
+        {% csrf_token %}
+        <select
+          id="inputState"
+          class="form-control py-0 px-4 m-0"
+          name="kategori"
+          onchange="this.form.submit()"
+        >
+          <option selected>Search Category</option>
+          {% for d in kategori %}
+          <option value="{{d.kategori}}">{{d.kategori}}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <table class="table">
+      <thead>
+        <tr>
+          <td class="col">No</td>
+          <td class="col-1">DateIn</td>
+          <td class="col-1">Device</td>
+          <td class="col-1">User</td>
+          <td class="col-1">Email</td>
+          <td class="col-1">PC/Laptop</td>
+          <td class="col-1">OS</td>
+          <td class="col-1">CPU</td>
+          <td class="col-1">VGA</td>
+          <td class="col-1">RAM</td>
+          <td class="col-1">Model</td>
+          <td class="col-1">Serial Number</td>
+          <td class="col">Kategory</td>
+          <td class="col">Description</td>
+          <td class="col-4"><center>Action</center></td>
+        </tr>
+      </thead>
+      {% if not results %}
+      <tbody>
+        {% for data in riwayatDT %}
+        <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{data.date}}</td>
+          <td>{{ data.device }}</td>
+          <td>{{data.user}}</td>
+          <td>{{data.email}}</td>
+          <td>{{data.pc}}</td>
+          <td>{{data.os}}</td>
+          <td>{{data.cpu}}</td>
+          <td>{{data.vga}}</td>
+          <td>{{data.ram}}</td>
+          <td>{{data.model}}</td>
+          <td>{{data.serialnumber}}</td>
+          <td>{{data.kategori}}</td>
+          <td>{{data.description}}</td>
+          <td>
+            <center>
+              <center>
+                <a
+                  href="{% url 'deleteitem' data.id %}"
+                  class="btn btn-danger btn-sm"
+                  >Delete</a
+                >
+              </center>
+            </center>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      {% elif get_search != "None" %}
+      <tbody>
+        {% for data in results %}
+        <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{data.date}}</td>
+          <td>{{ data.device }}</td>
+          <td>{{data.user}}</td>
+          <td>{{data.email}}</td>
+          <td>{{data.pc}}</td>
+          <td>{{data.os}}</td>
+          <td>{{data.cpu}}</td>
+          <td>{{data.vga}}</td>
+          <td>{{data.ram}}</td>
+          <td>{{data.model}}</td>
+          <td>{{data.serialnumber}}</td>
+          <td>{{data.kategori}}</td>
+          <td>{{data.description}}</td>
+          <td>
+            <center>
+              <center>
+                <a
+                  href="{% url 'deleteitem' data.id %}"
+                  class="btn btn-danger btn-sm"
+                  >Delete</a
+                >
+              </center>
+            </center>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      {% elif get_kategori != "None" %}
+      <tbody>
+        {% for data in results %}
+        <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{data.date}}</td>
+          <td>{{ data.device }}</td>
+          <td>{{data.user}}</td>
+          <td>{{data.email}}</td>
+          <td>{{data.pc}}</td>
+          <td>{{data.os}}</td>
+          <td>{{data.cpu}}</td>
+          <td>{{data.vga}}</td>
+          <td>{{data.ram}}</td>
+          <td>{{data.model}}</td>
+          <td>{{data.serialnumber}}</td>
+          <td>{{data.kategori}}</td>
+          <td>{{data.description}}</td>
+          <td>
+            <center>
+              <center>
+                <a
+                  href="{% url 'deleteitem' data.id %}"
+                  class="btn btn-danger btn-sm"
+                  >Delete</a
+                >
+              </center>
+            </center>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      {% endif %}
+    </table>
+  </div>
+</div>
+
+{% endblock content %}

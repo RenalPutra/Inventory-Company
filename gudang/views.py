@@ -269,3 +269,35 @@ def tbdatabarang(request):
     }
 
     return render(request, template_name, context)
+
+def tbriwayatdata(request):
+    template_name = "tbriwayatbarang.html"
+    
+    global results
+    results = None
+    riwayatDT = BarangKeluar.objects.all()
+    kategori = Kategori.objects.all()
+    get_kategori = str(request.POST.get('kategori'))
+    get_search = request.POST.get('search')
+    search_category = BarangKeluar.objects.filter(
+        kategori__kategori__contains=get_kategori)
+    if get_search:
+
+        queries = Q(device__icontains=get_search) | Q(user__icontains=get_search) | Q(email__icontains=get_search) | Q(pc__icontains=get_search) | Q(os__icontains=get_search) | Q(
+            cpu__icontains=get_search) | Q(vga__icontains=get_search) | Q(ram__icontains=get_search) | Q(model__icontains=get_search) | Q(serialnumber__icontains=get_search) | Q(description__icontains=get_search)
+
+        results = barangsearch_category = BarangKeluar.objects.filter(queries)
+
+    elif get_kategori:
+        results = barangsearch_category = BarangKeluar.objects.filter(
+            kategori__kategori__contains=get_kategori)
+    
+    context = {
+        "riwayatDT" : riwayatDT,
+        'kategori': kategori,
+        's_kategori': search_category,
+        'get_kategori': get_kategori,
+        'get_search': get_search,
+        'results': results,
+    }
+    return render(request, template_name, context)

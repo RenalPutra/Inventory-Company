@@ -9,6 +9,7 @@ urlpatterns = [
     path("edititem/<int:id>", editBarangMasuk, name="edititem"),
     path("deleteitem/<int:id>", deleteBarangMasuk, name="deleteitem"),
     path("barangkeluar", barangkeluar, name="barangkeluar"),
+    path("riwayatdata", tbriwayatdata, name="riwayatdata"),
 
 
 
