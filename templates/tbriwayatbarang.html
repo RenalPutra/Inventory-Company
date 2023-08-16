@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content %}
 
 <div class="container-fluid px-5 col-2 rounded-1">
-  <h2 class="title text-dark">Data Barang</h2>
+  <h2 class="title text-dark">Riwayat Data Barang</h2>
   <br />
   <!-- Button trigger modal -->
 
@@ -51,6 +51,7 @@
         <tr>
           <td class="col">No</td>
           <td class="col-1">DateIn</td>
+          <td class="col-1">DateOut</td>
           <td class="col-1">Device</td>
           <td class="col-1">User</td>
           <td class="col-1">Email</td>
@@ -71,7 +72,8 @@
         {% for data in riwayatDT %}
         <tr>
           <td>{{forloop.counter}}</td>
-          <td>{{data.date}}</td>
+          <td>{{data.date_masuk}}</td>
+          <td>{{data.date_keluar}}</td>
           <td>{{ data.device }}</td>
           <td>{{data.user}}</td>
           <td>{{data.email}}</td>
@@ -88,7 +90,7 @@
             <center>
               <center>
                 <a
-                  href="{% url 'deleteitem' data.id %}"
+                  href="{% url 'deleteitemkeluar' data.id %}"
                   class="btn btn-danger btn-sm"
                   >Delete</a
                 >
@@ -103,7 +105,8 @@
         {% for data in results %}
         <tr>
           <td>{{forloop.counter}}</td>
-          <td>{{data.date}}</td>
+          <td>{{data.date_masuk}}</td>
+          <td>{{data.date_keluar}}</td>
           <td>{{ data.device }}</td>
           <td>{{data.user}}</td>
           <td>{{data.email}}</td>
@@ -120,7 +123,7 @@
             <center>
               <center>
                 <a
-                  href="{% url 'deleteitem' data.id %}"
+                  href="{% url 'deleteitemkeluar' data.id %}"
                   class="btn btn-danger btn-sm"
                   >Delete</a
                 >
@@ -135,7 +138,8 @@
         {% for data in results %}
         <tr>
           <td>{{forloop.counter}}</td>
-          <td>{{data.date}}</td>
+          <td>{{data.date_masuk}}</td>
+          <td>{{data.date_keluar}}</td>
           <td>{{ data.device }}</td>
           <td>{{data.user}}</td>
           <td>{{data.email}}</td>
@@ -152,7 +156,7 @@
             <center>
               <center>
                 <a
-                  href="{% url 'deleteitem' data.id %}"
+                  href="{% url 'deleteitemkeluar' data.id %}"
                   class="btn btn-danger btn-sm"
                   >Delete</a
                 >

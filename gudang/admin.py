@@ -17,9 +17,9 @@ class BarangMasukAdmin(admin.ModelAdmin):
 
 
 class BarangKeluarAdmin(admin.ModelAdmin):
-    list_display = ['date', 'device', 'user', 'email', 'pc', 'os', 'cpu',
+    list_display = ['date_keluar', 'date_masuk', 'device', 'user', 'email', 'pc', 'os', 'cpu',
                     'vga', 'ram', 'model', 'serialnumber', 'description', 'kategori',]
-    list_filter = ('date', 'device', 'user', 'email', 'pc', 'os', 'cpu',
+    list_filter = ('date_keluar', 'date_masuk', 'device', 'user', 'email', 'pc', 'os', 'cpu',
                    'vga', 'ram', 'model', 'serialnumber', 'description', 'kategori',)
 
 

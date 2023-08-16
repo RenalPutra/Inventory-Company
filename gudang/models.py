@@ -16,7 +16,7 @@ class Kategori(models.Model):
 
 
 class BarangMasuk(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.CharField(max_length=100)
     device = models.TextField(max_length=100)
     user = models.TextField(max_length=100)
     email = models.TextField(max_length=100)
@@ -38,7 +38,8 @@ class BarangMasuk(models.Model):
 
 
 class BarangKeluar(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
+    date_keluar = models.CharField(max_length=100,blank=True, null=True)
+    date_masuk = models.CharField(max_length=100,blank=True, null=True)
     device = models.TextField(max_length=100)
     user = models.TextField(max_length=100)
     email = models.TextField(max_length=100)

@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from .models import *
+from datetime import datetime 
 # Create your views here.
 
 
@@ -60,6 +61,8 @@ def dashboard(request):
 def barangmasuk(request):
     template_name = "formbarangmasuk.html"
     kategori = Kategori.objects.all()
+    waktu_sekarang = datetime.now()
+    format_tanggal = waktu_sekarang.strftime("%a %m %Y - %H:%M:%S")
     if request.method == 'POST':
         device = request.POST.get('device')
         user = request.POST.get('user')
@@ -82,6 +85,7 @@ def barangmasuk(request):
         else:
             kat = Kategori.objects.get(kategori=kategori)
             BarangMasuk.objects.create(
+                date=format_tanggal,
                 device=device,
                 user=user,
                 email=email,
@@ -101,6 +105,7 @@ def barangmasuk(request):
     context = {
         'kategori': kategori,
     }
+ 
     return render(request, template_name, context)
 
 # jika barang keluar user hanya perlu mengisi Device saja
@@ -111,6 +116,9 @@ def barangmasuk(request):
 def barangkeluar(request):
     template_name = "formbarangkeluar.html"
     kategori = Kategori.objects.all()
+    kategori = Kategori.objects.all()
+    waktu_sekarang = datetime.now()
+    format_tanggal = waktu_sekarang.strftime("%a %m %Y - %H:%M:%S")
 
     if request.method == 'POST':
         device = request.POST.get('device')
@@ -120,6 +128,8 @@ def barangkeluar(request):
             if 'submit_form' in request.POST:
                 # Jika tombol "Submit" ditekan, simpan data ke BarangKeluar
                 form_data = {
+                    'date_keluar':format_tanggal,
+                    'date_masuk':existing_barang.date,
                     'device': existing_barang.device,
                     'user': existing_barang.user,
                     'email': existing_barang.email,
@@ -137,6 +147,8 @@ def barangkeluar(request):
                     kategori=existing_barang.kategori.kategori)
                 # Simpan data ke BarangKeluar
                 BarangKeluar.objects.create(
+                    date_keluar=format_tanggal,
+                    date_masuk=existing_barang.date,
                     device=device,
                     user=existing_barang.user,
                     email=existing_barang.email,
@@ -234,6 +246,10 @@ def editBarangMasuk(request, id):
 def deleteBarangMasuk(request, id):
     BarangMasuk.objects.get(id=id).delete()
     return redirect(tbdatabarang)
+
+def deleteBarangKeluar(request, id):
+    BarangKeluar.objects.get(id=id).delete()
+    return redirect(tbriwayatdata)
 
 
 def tbdatabarang(request):
