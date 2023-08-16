@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container rounded-1">
+  <h2 class="title text-dark">Daftar Pengguna</h2>
+  <br>
+  <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+    Tambah
+  </button>
+  <br>
+  <br>
+  <div class="row">
+    <table class="table">
+      <thead>
+        <tr>
+          <td>No</td>
+          <td>Username</td>
+          <td>first name</td>
+          <td>last name</td>
+          <td>email</td>
+          <td>Status</td>
+            <td>Action</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in user %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ a.username }}</td>
+            <td>{{ a.first_name }}</td>
+            <td>{{ a.last_name }}</td>
+            <td>{{ a.email }}</td>
+          <td>
+            {% if a.is_staff%}
+            <span class="badge bg-success">Super Admin</span>
+            {% else %}
+            <span class="badge bg-danger">Admin</span>
+            {% endif %}
+          </td>
+          <td>
+            <a href="#" class="btn btn-warning">Edit</a>
+            <a href="#" class="btn btn-danger">Delete</a>
+        </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'register' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="firstname" class="form-label">firstname</label>
+                        <input type="text" class="form-control" id="username" name="firstname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastname" class="form-label">lastname</label>
+                        <input type="text" class="form-control" id="username" name="lastname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

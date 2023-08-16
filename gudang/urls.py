@@ -11,6 +11,11 @@ urlpatterns = [
     path("deleteitemkeluar/<int:id>", deleteBarangKeluar, name="deleteitemkeluar"),
     path("barangkeluar", barangkeluar, name="barangkeluar"),
     path("riwayatdata", tbriwayatdata, name="riwayatdata"),
+    path("login", login, name="login"),
+    path("register", register, name="register"),
+    path("logout", logout, name="logout"),
+    path("user", user, name="user"),
+
 
 
 

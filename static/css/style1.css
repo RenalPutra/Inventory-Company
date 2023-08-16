@@ -267,6 +267,9 @@ nav.close ~ .dashboard .top{
 .menu_setting::before {
   content: "Data";
 }
+.menu_data::before {
+  content: "Data User";
+}
 .sidebar.close .menu_title::before {
   content: "";
   position: absolute;
@@ -382,6 +385,7 @@ nav.close ~ .dashboard .top{
 #sidebarOpen {
   display: none;
 }
+
 @media screen and (max-width: 768px) {
   #sidebarOpen {
     font-size: 25px;

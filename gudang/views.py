@@ -1,15 +1,25 @@
 from .models import Kategori, BarangKeluar
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout
+from django.contrib.auth import login as auth_login, authenticate, login
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from .models import *
-from datetime import datetime 
+from datetime import datetime
+
 # Create your views here.
 
 
+@login_required
 def analitic(request):
     template_name = "analitic.html"
 
@@ -52,12 +62,17 @@ def analitic(request):
     return render(request, template_name, context)
 
 
+@login_required
 def dashboard(request):
     template_name = "base.html"
+    user = User.objects.all()
+    context = {
+        'user': user,
+    }
+    return render(request, template_name, context)
 
-    return render(request, template_name)
 
-
+@login_required
 def barangmasuk(request):
     template_name = "formbarangmasuk.html"
     kategori = Kategori.objects.all()
@@ -105,7 +120,7 @@ def barangmasuk(request):
     context = {
         'kategori': kategori,
     }
- 
+
     return render(request, template_name, context)
 
 # jika barang keluar user hanya perlu mengisi Device saja
@@ -113,6 +128,7 @@ def barangmasuk(request):
 # jika device tidak ada maka akan muncul pesan error
 
 
+@login_required
 def barangkeluar(request):
     template_name = "formbarangkeluar.html"
     kategori = Kategori.objects.all()
@@ -128,8 +144,8 @@ def barangkeluar(request):
             if 'submit_form' in request.POST:
                 # Jika tombol "Submit" ditekan, simpan data ke BarangKeluar
                 form_data = {
-                    'date_keluar':format_tanggal,
-                    'date_masuk':existing_barang.date,
+                    'date_keluar': format_tanggal,
+                    'date_masuk': existing_barang.date,
                     'device': existing_barang.device,
                     'user': existing_barang.user,
                     'email': existing_barang.email,
@@ -198,6 +214,7 @@ def barangkeluar(request):
     return render(request, template_name, context,)
 
 
+@login_required
 def editBarangMasuk(request, id):
     template_name = "formbarangmasuk.html"
     get_item = BarangMasuk.objects.get(id=id)
@@ -243,15 +260,19 @@ def editBarangMasuk(request, id):
     return render(request, template_name, context)
 
 
+@login_required
 def deleteBarangMasuk(request, id):
     BarangMasuk.objects.get(id=id).delete()
     return redirect(tbdatabarang)
 
+
+@login_required
 def deleteBarangKeluar(request, id):
     BarangKeluar.objects.get(id=id).delete()
     return redirect(tbriwayatdata)
 
 
+@login_required
 def tbdatabarang(request):
 
     global results
@@ -286,9 +307,10 @@ def tbdatabarang(request):
 
     return render(request, template_name, context)
 
+
+@login_required
 def tbriwayatdata(request):
     template_name = "tbriwayatbarang.html"
-    
     global results
     results = None
     riwayatDT = BarangKeluar.objects.all()
@@ -307,13 +329,80 @@ def tbriwayatdata(request):
     elif get_kategori:
         results = barangsearch_category = BarangKeluar.objects.filter(
             kategori__kategori__contains=get_kategori)
-    
+
     context = {
-        "riwayatDT" : riwayatDT,
+        "riwayatDT": riwayatDT,
         'kategori': kategori,
         's_kategori': search_category,
         'get_kategori': get_kategori,
         'get_search': get_search,
         'results': results,
+    }
+    return render(request, template_name, context)
+
+
+def login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            auth_login(request, user)
+            messages.success(request, "You have been logged in successfully")
+            return redirect('dashboard')
+        else:
+            messages.error(request, "Invalid username or password")
+            return redirect('dashboard')
+    else:
+        return render(request)
+
+
+def register(request):
+    if request.method == 'POST':
+        firstname = request.POST.get('firstname')
+        lastname = request.POST.get('lastname')
+        email = request.POST.get('email')
+        username = request.POST.get('username')
+        make_password(request.POST.get('password'))
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists")
+            return redirect('user')
+        elif User.objects.filter(email=email).exists():
+            messages.error(request, "Email already exists")
+            return redirect('user')
+        else:
+            user = User.objects.create(
+                first_name=firstname,
+                last_name=lastname,
+                email=email,
+                username=username,
+                password=make_password(request.POST.get('password'))
+            )
+            user.save()
+            messages.success(request, "User created successfully")
+            return redirect('user')
+    else:
+        form = UserCreationForm()
+
+    context = {
+        'title': 'Register',
+        'form': form,
+
+    }
+    return render(request, context)
+
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, "You have been logged out successfully")
+    return redirect('welcome')
+
+
+@login_required
+def user(request):
+    template_name = "tbuser.html"
+    user = User.objects.all()
+    context = {
+        'user': user,
     }
     return render(request, template_name, context)
