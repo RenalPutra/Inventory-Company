@@ -19,7 +19,7 @@ def analitic(request):
 
     # Mengambil 5 recent activity data masuk dan data keluar terbaru
     recent_activity_masuk = BarangMasuk.objects.order_by('-date')[:5]
-    recent_activity_keluar = BarangKeluar.objects.order_by('-date')[:5]
+    recent_activity_keluar = BarangKeluar.objects.order_by('-date_keluar')[:5]
 
     # Mengumpulkan data recent activity untuk ditampilkan di template
     recent_activity = []
@@ -37,7 +37,7 @@ def analitic(request):
             'device': activity.device,  # 'device' adalah nama field di model 'BarangKeluar
             'name': activity.user,
             'email': activity.email,
-            'joined': activity.date,
+            'joined': activity.date_keluar,
             'type': 'Data Keluar',
             'status': 'Liked'  # Anda dapat mengganti ini sesuai dengan kebutuhan
         })
