@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
+from gudang import views
 
 
 # def dashboard(request):
@@ -10,6 +11,10 @@ from django.http import HttpResponseRedirect
 
 def welcome(request):
     template_name = "welcome.html"
+    
+    if request.user.is_authenticated:
+        return redirect(views.analitic)
+    
     return render(request, template_name)
 
 

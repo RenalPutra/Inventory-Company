@@ -15,13 +15,22 @@ from django.db import transaction
 from django.http import HttpResponseRedirect
 from .models import *
 from datetime import datetime
+from inventory import views
 
 # Create your views here.
 
+def is_operator(user):
+    if user.groups.filter(name="Operator").exists():
+        return True
+    else:
+        return False
 
 @login_required
 def analitic(request):
     template_name = "analitic.html"
+    
+    if request.user.groups.filter(name="Operator").exists():
+        request.session['is_operator'] = 'operator'
 
     # Menghitung total data masuk dan data keluar
     total_data_masuk = BarangMasuk.objects.count()
@@ -349,60 +358,112 @@ def login(request):
         if user is not None:
             auth_login(request, user)
             messages.success(request, "You have been logged in successfully")
-            return redirect('dashboard')
+            return redirect(analitic)
         else:
             messages.error(request, "Invalid username or password")
-            return redirect('dashboard')
+            return redirect(views.welcome)
     else:
         return render(request)
 
-
+@login_required
+@user_passes_test(is_operator)
 def register(request):
-    if request.method == 'POST':
-        firstname = request.POST.get('firstname')
-        lastname = request.POST.get('lastname')
-        email = request.POST.get('email')
-        username = request.POST.get('username')
-        make_password(request.POST.get('password'))
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists")
-            return redirect('user')
-        elif User.objects.filter(email=email).exists():
-            messages.error(request, "Email already exists")
-            return redirect('user')
+    
+    with transaction.atomic():
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            get_password = request.POST.get('password')
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            email = request.POST.get('email')
+            if User.objects.filter(username=username).exists():
+                messages.error(request, "Username already exists")
+                return redirect(tbuser)
+            elif User.objects.filter(email=email).exists():
+                messages.error(request, "Email already exists")
+                return redirect(tbuser)
+            else:
+                User.objects.create(
+                username = username,
+                password = make_password(get_password),
+                first_name = first_name,
+                last_name = last_name,
+                email = email,)
+                messages.success(request, "User created successfully")
+                return redirect(tbuser)
         else:
-            user = User.objects.create(
-                first_name=firstname,
-                last_name=lastname,
-                email=email,
-                username=username,
-                password=make_password(request.POST.get('password'))
-            )
-            user.save()
-            messages.success(request, "User created successfully")
-            return redirect('user')
-    else:
-        form = UserCreationForm()
-
+            form = UserCreationForm()
+            
     context = {
         'title': 'Register',
         'form': form,
-
     }
+    
     return render(request, context)
+
+@login_required
+@user_passes_test(is_operator)
+def editUser(request, id):
+    template_name = "tbuser.html"
+    get_user = User.objects.get(id=id)
+    user = User.objects.all()
+    id_user = get_user.id
+    print(get_user.id)
+    
+
+    print(id_user)
+    with transaction.atomic():
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            get_password = request.POST.get('password')
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            email = request.POST.get('email')
+            print(first_name)
+            print(last_name)
+
+            get_user.username = username
+            get_user.password = make_password(get_password)
+            get_user.first_name = first_name
+            get_user.last_name = last_name
+            get_user.email = email
+            get_user.save()
+        
+            return redirect(tbuser)
+    
+    
+        
+    context = {
+        "users" : get_user,
+        "id_user" : id_user,
+        "test" : "'',",
+        'user': user,
+    }
+    
+            
+    return render(request, template_name, context)
 
 
 def logout_view(request):
     logout(request)
     messages.success(request, "You have been logged out successfully")
-    return redirect('welcome')
+    return redirect(views.welcome)
 
 
 @login_required
-def user(request):
+@user_passes_test(is_operator)
+def tbuser(request):
     template_name = "tbuser.html"
     user = User.objects.all()
+    id_user = 0
     context = {
         'user': user,
+        'id_user' : id_user
     }
     return render(request, template_name, context)
+
+@login_required
+@user_passes_test(is_operator)
+def hapusUsers(request, id):
+    User.objects.get(id=id).delete()
+    return redirect(tbuser)

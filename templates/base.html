@@ -14,6 +14,11 @@
     <link rel="stylesheet" href="{% static 'css/form1.css' %}">
     <title>inventory</title>
     <link rel="stylesheet" href="{% static 'css/style1.css' %} ">
+    <style>
+      .hover-effect:hover {
+        opacity: 0.5;
+      }
+    </style>
   </head>
   <body>
     <!-- navbar -->
@@ -112,21 +117,7 @@
             </a>
           </li>
         </ul>
-        {% if a.is_staff%}
-        <ul class="menu_items">
-          <div class="menu_title menu_data"></div>
-          <li class="item">
-            <a href="{% url 'user' %}" class="nav_link">
-              <span class="navlink_icon">
-                <i class="bi bi-people-fill"></i>
-              </span>
-              <span class="navlink">User</span>
-            </a>
-          </li>
-        </ul>
-        {% else %}
         
-        {% endif %}
         <!-- Sidebar Open / Close -->
         <div class="bottom_content">
           <div class="bottom expand_sidebar">
@@ -155,17 +146,26 @@
         <i class="bi bi-grid"></i>
         <i class='bx bx-sun' id="darkLight"></i>
         <i class='bx bx-bell'></i>
-        {% if user.is_authenticated %}
+        {% if request.session.is_operator == 'operator' %}
         <div class="dropdown">
             <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class='bx bx-user'></i>  Hi, {{ user.username|truncatechars:10 }}
+              <i class='bx bx-user'></i>  Hi, {{ request.user.username|truncatechars:10 }}
             </button>
             <ul class="dropdown-menu" aria-labelledby="userDropdown">
                 <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                <li><a class="dropdown-item" href="{% url 'usertb' %}">Control User</a></li>
             </ul>
         </div>
         {% else %}
-        <i class='bx bx-user'></i>
+        <div class="dropdown">
+          <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class='bx bx-user'></i>  Hi, {{ request.user.username|truncatechars:10 }}
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+           
+          </ul>
+      </div>
         {% endif %}
         
     </div>
@@ -202,5 +202,6 @@
     <script src="{% static 'js/script.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    
   </body>
 </html>

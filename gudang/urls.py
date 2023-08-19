@@ -2,8 +2,7 @@ from django.urls import path, include
 from .views import *
 
 urlpatterns = [
-    path("", dashboard, name="dashboard"),
-    path("analitic", analitic, name="analitic"),
+    path("", analitic, name="analitic"),
     path("barangmasuk", barangmasuk, name="barangmasuk"),
     path("tbdatabarang", tbdatabarang, name="tbdatabarang"),
     path("edititem/<int:id>", editBarangMasuk, name="edititem"),
@@ -13,8 +12,10 @@ urlpatterns = [
     path("riwayatdata", tbriwayatdata, name="riwayatdata"),
     path("login", login, name="login"),
     path("register", register, name="register"),
-    path("logout", logout, name="logout"),
-    path("user", user, name="user"),
+    path("logout", logout_view, name="logout"),
+    path("usertb", tbuser, name="usertb"),
+    path("edituser/<int:id>", editUser, name="edituser"),
+    path("hapususer/<int:id>", hapusUsers, name="hapususer"),
 
 
 
