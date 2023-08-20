@@ -12,11 +12,11 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.db import transaction
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from .models import *
 from datetime import datetime
 from inventory import views
-
+import csv
 # Create your views here.
 
 def is_operator(user):
@@ -467,3 +467,17 @@ def tbuser(request):
 def hapusUsers(request, id):
     User.objects.get(id=id).delete()
     return redirect(tbuser)
+
+def export_to_csv(request):
+    riwayattb = BarangKeluar.objects.all()
+    response = HttpResponse('')
+    response['Content-Disposition'] = 'attachment; filename=riwayat_data_export.csv'
+    writer = csv.writer(response)
+    writer.writerow(['Date Keluar', 'Date Masuk', 'Device', 'User', 'Email', 'Pc', 'Os', 'Cpu',
+                    'Vga', 'Ram', 'Model', 'Serialnumber', 'Description', 'Kategori'])
+    data_fields = riwayattb.values_list('date_keluar', 'date_masuk', 'device', 'user', 'email', 'pc', 'os', 'cpu',
+                    'vga', 'ram', 'model', 'serialnumber', 'description', 'kategori')
+    for riwayattb in data_fields:
+        writer.writerow(riwayattb)
+    return response
+    
