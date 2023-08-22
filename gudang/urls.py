@@ -17,6 +17,7 @@ urlpatterns = [
     path("edituser/<int:id>", editUser, name="edituser"),
     path("hapususer/<int:id>", hapusUsers, name="hapususer"),
     path("export-to-csv", export_to_csv, name="exportcsv"),
+    path("delete_selected", delete_selected, name="delete_selected"),
 
 
 

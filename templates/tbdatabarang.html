@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content %}
 
 <div class="container-fluid px-5 col-2 rounded-1">
-  <h2 class="title text-dark">Data Barang</h2>
+  <h2 class="title">Data Barang</h2>
   <br />
   <!-- Button trigger modal -->
   <button
@@ -79,7 +79,7 @@
         <tr>
           <td>{{forloop.counter}}</td>
           <td>{{data.date}}</td>
-          <td>{{ data.device }}</td>
+          <td>{{data.device}}</td>
           <td>{{data.user}}</td>
           <td>{{data.email}}</td>
           <td>{{data.pc}}</td>
@@ -100,10 +100,27 @@
                   >Edit</a
                 >
                 <a
-                  href="{% url 'deleteitem' data.id %}"
-                  class="btn btn-danger btn-sm"
+                  href="#"
+                  class="btn btn-danger btn-sm" data-bs-target="#exampleModalToggle" data-bs-toggle="modal"
                   >Delete</a
                 >
+                <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                  <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                          <div class="modal-body mb-5">
+                              <h1><i class="bi bi-question-circle "></i></h1>
+                              <h5 class="modal-title" id="exampleModalToggleLabel">Are you sure?</h5>
+                          </div>
+                          <div class="mb-3">
+                              <a href="{% url 'tbdatabarang' %}" class="btn btn-primary">Cancel</a>
+                              <a href="{% url 'deleteitem' data.id %}" class="btn btn-danger">Delete</a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              
+                  </div>
+                </div>
               </center>
             </center>
           </td>
@@ -137,10 +154,24 @@
                   >Edit</a
                 >
                 <a
-                  href="{% url 'deleteitem' data.id %}"
-                  class="btn btn-danger btn-sm"
+                  href="#"
+                  class="btn btn-danger btn-sm" data-bs-target="#exampleModalToggle" data-bs-toggle="modal"
                   >Delete</a
                 >
+                <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                  <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                          <div class="modal-body mb-5">
+                              <h1><i class="bi bi-question-circle "></i></h1>
+                              <h5 class="modal-title" id="exampleModalToggleLabel">Are you sure?</h5>
+                          </div>
+                          <div class="mb-3">
+                              <a href="{% url 'tbdatabarang' %}" class="btn btn-primary">Cancel</a>
+                              <a href="{% url 'deleteitem' data.id %}" class="btn btn-danger">Delete</a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
               </center>
             </center>
           </td>
@@ -174,10 +205,25 @@
                   >Edit</a
                 >
                 <a
-                  href="{% url 'deleteitem' data.id %}"
-                  class="btn btn-danger btn-sm"
+                  href="#"
+                  class="btn btn-danger btn-sm" data-bs-target="#exampleModalToggle" data-bs-toggle="modal"
                   >Delete</a
                 >
+                <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                  <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                          <div class="modal-body mb-5">
+                              <h1><i class="bi bi-question-circle "></i></h1>
+                              <h5 class="modal-title" id="exampleModalToggleLabel">Are you sure?</h5>
+                          </div>
+                          <div class="mb-3">
+                              <a href="{% url 'tbdatabarang' %}" class="btn btn-primary">Cancel</a>
+                              <a href="{% url 'deleteitem' data.id %}" class="btn btn-danger">Delete</a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+                
               </center>
             </center>
           </td>
@@ -188,5 +234,6 @@
     </table>
   </div>
 </div>
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 {% endblock content %}

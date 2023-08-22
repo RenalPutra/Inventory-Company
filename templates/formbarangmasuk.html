@@ -11,6 +11,7 @@
             {% csrf_token %}
             <div class="form first">
                 <div class="details personal">
+                    
                     <span class="title">Details</span>
 
                     <div class="fields">
@@ -114,25 +115,6 @@
             </div>
         </form>
     </div>
-    {% for msg in messages%}
-    {% if msg.tags == 'error' %}
-    <script>
-        Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: '{{ msg }}',
-        })
-    </script>
-    {% else %}
-    <script>
-        Swal.fire(
-        '{{ msg }}',
-        'You clicked the button!',
-        'success'
-    )
-    </script>
-    {% endif %}
-    {% endfor %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="sweetalert2.min.js"></script>
 

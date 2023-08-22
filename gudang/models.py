@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -16,6 +17,8 @@ class Kategori(models.Model):
 
 
 class BarangMasuk(models.Model):
+    nama = models.ForeignKey(
+        User, on_delete=models.CASCADE, blank=True, null=True)
     date = models.CharField(max_length=100)
     device = models.TextField(max_length=100)
     user = models.TextField(max_length=100)
@@ -38,8 +41,10 @@ class BarangMasuk(models.Model):
 
 
 class BarangKeluar(models.Model):
-    date_keluar = models.CharField(max_length=100,blank=True, null=True)
-    date_masuk = models.CharField(max_length=100,blank=True, null=True)
+    nama = models.ForeignKey(
+        User, on_delete=models.CASCADE, blank=True, null=True)
+    date_keluar = models.CharField(max_length=100, blank=True, null=True)
+    date_masuk = models.CharField(max_length=100, blank=True, null=True)
     device = models.TextField(max_length=100)
     user = models.TextField(max_length=100)
     email = models.TextField(max_length=100)

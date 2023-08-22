@@ -25,7 +25,18 @@ body.dark {
   --grey-color: #f2f2f2;
   --grey-color-light: #aaa;
 }
-
+td.col  {
+  color: var(--grey-color);
+}
+td.col-1  {
+  color: var(--grey-color);
+}
+td {
+  color: var(--grey-color);
+}
+.title {
+  color: var(--grey-color);
+}
 /* navbar */
 .navbar {
   position: fixed;

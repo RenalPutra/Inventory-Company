@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content %}
 
 <div class="container-fluid px-5 col-2 rounded-1">
-  <h2 class="title text-dark">Riwayat Data Barang</h2>
+  <h2 class="title">Riwayat Data Barang</h2>
   <br />
   <!-- Button trigger modal -->
 
@@ -44,6 +44,7 @@
         </select>
       </form>
     </div>
+    
     <div>
       <div class="d-flex align-items-center">
         <form
@@ -71,133 +72,267 @@
             Export
           </button>
         </form>
+        <div class="row m-lg-0">
+          <div class="col">
+            <button type="button" class="btn btn-danger" id="deleteSelected">Delete Selected</button>
+          </div>
       </div>
+      </div>
+     
     </div>
   </div>
+  
   <div class="row">
-    <table class="table">
-      <thead>
-        <tr>
-          <td class="col">No</td>
-          <td class="col-1">DateIn</td>
-          <td class="col-1">DateOut</td>
-          <td class="col-1">Device</td>
-          <td class="col-1">User</td>
-          <td class="col-1">Email</td>
-          <td class="col-1">PC/Laptop</td>
-          <td class="col-1">OS</td>
-          <td class="col-1">CPU</td>
-          <td class="col-1">VGA</td>
-          <td class="col-1">RAM</td>
-          <td class="col-1">Model</td>
-          <td class="col-1">Serial Number</td>
-          <td class="col">Kategory</td>
-          <td class="col">Description</td>
-          <td class="col-4"><center>Action</center></td>
-        </tr>
-      </thead>
-      {% if not results %}
-      <tbody>
-        {% for data in riwayatDT %}
-        <tr>
-          <td>{{forloop.counter}}</td>
-          <td>{{data.date_masuk}}</td>
-          <td>{{data.date_keluar}}</td>
-          <td>{{ data.device }}</td>
-          <td>{{data.user}}</td>
-          <td>{{data.email}}</td>
-          <td>{{data.pc}}</td>
-          <td>{{data.os}}</td>
-          <td>{{data.cpu}}</td>
-          <td>{{data.vga}}</td>
-          <td>{{data.ram}}</td>
-          <td>{{data.model}}</td>
-          <td>{{data.serialnumber}}</td>
-          <td>{{data.kategori}}</td>
-          <td>{{data.description}}</td>
-          <td>
-            <center>
+    <form id="deleteForm" method="post" action="{% url 'delete_selected' %}">
+      {% csrf_token %}
+      <table class="table">
+        <thead>
+          <tr>
+            <td>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="selectAll"
+              />
+            </td>
+            <td class="col">No</td>
+            <td class="col">DateIn</td>
+            <td class="col">DeteOut</td>
+            <td class="col">Device</td>
+            <td class="col">User</td>
+            <td class="col">Email</td>
+            <td class="col">PC/Laptop</td>
+            <td class="col">OS</td>
+            <td class="col">CPU</td>
+            <td class="col">VGA</td>
+            <td class="col">RAM</td>
+            <td class="col">Model</td>
+            <td class="col">Serial Number</td>
+            <td class="col">Kategory</td>
+            <td class="col">Description</td>
+            <td class="col"><center>Action</center></td>
+          </tr>
+        </thead>
+        {% if not results %}
+        <tbody>
+          {% for data in riwayatDT %}
+          <tr>
+            <td>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                name="selected_items"
+                value="{{ data.id }}"
+              />
+            </td>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ data.date_masuk }}</td>
+            <td>{{ data.date_keluar }}</td>
+            <td>{{ data.device }}</td>
+            <td>{{ data.user }}</td>
+            <td>{{ data.email }}</td>
+            <td>{{ data.pclaptop }}</td>
+            <td>{{ data.os }}</td>
+            <td>{{ data.cpu }}</td>
+            <td>{{ data.vga }}</td>
+            <td>{{ data.ram }}</td>
+            <td>{{ data.model }}</td>
+            <td>{{ data.serialnumber }}</td>
+            <td>{{ data.kategori }}</td>
+            <td>{{ data.description }}</td>
+            <td>
               <center>
-                <a
-                  href="{% url 'deleteitemkeluar' data.id %}"
-                  class="btn btn-danger btn-sm"
-                  >Delete</a
-                >
+                <center>
+                  <a
+                    href="#"
+                    class="btn btn-danger btn-sm" data-bs-target="#exampleModalToggle" data-bs-toggle="modal"
+                    >Delete</a
+                  >
+                  <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body mb-5">
+                                <h1><i class="bi bi-question-circle "></i></h1>
+                                <h5 class="modal-title" id="exampleModalToggleLabel">Are you sure?</h5>
+                            </div>
+                            <div class="mb-3">
+                                <a href="{% url 'riwayatdata' %}" class="btn btn-primary">Cancel</a>
+                                <a href="{% url 'deleteitemkeluar' data.id %}" class="btn btn-danger">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                    </div>
+                  </div>
+                </center>
               </center>
-            </center>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-      {% elif get_search != "None" %}
-      <tbody>
-        {% for data in results %}
-        <tr>
-          <td>{{forloop.counter}}</td>
-          <td>{{data.date_masuk}}</td>
-          <td>{{data.date_keluar}}</td>
-          <td>{{ data.device }}</td>
-          <td>{{data.user}}</td>
-          <td>{{data.email}}</td>
-          <td>{{data.pc}}</td>
-          <td>{{data.os}}</td>
-          <td>{{data.cpu}}</td>
-          <td>{{data.vga}}</td>
-          <td>{{data.ram}}</td>
-          <td>{{data.model}}</td>
-          <td>{{data.serialnumber}}</td>
-          <td>{{data.kategori}}</td>
-          <td>{{data.description}}</td>
-          <td>
-            <center>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        {% elif get_search != "None" %}
+        <tbody>
+          {% for data in result %}
+          <tr>
+            <td>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                name="selected_items"
+                value="{{ data.id }}"
+              />
+            </td>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ data.date_masuk }}</td>
+            <td>{{ data.date_keluar }}</td>
+            <td>{{ data.device }}</td>
+            <td>{{ data.user }}</td>
+            <td>{{ data.email }}</td>
+            <td>{{ data.pclaptop }}</td>
+            <td>{{ data.os }}</td>
+            <td>{{ data.cpu }}</td>
+            <td>{{ data.vga }}</td>
+            <td>{{ data.ram }}</td>
+            <td>{{ data.model }}</td>
+            <td>{{ data.serialnumber }}</td>
+            <td>{{ data.kategori }}</td>
+            <td>{{ data.description }}</td>
+            <td>
               <center>
-                <a
-                  href="{% url 'deleteitemkeluar' data.id %}"
-                  class="btn btn-danger btn-sm"
-                  >Delete</a
-                >
+                <center>
+                  <a
+                    href="#"
+                    class="btn btn-danger btn-sm" data-bs-target="#exampleModalToggle" data-bs-toggle="modal"
+                    >Delete</a
+                  >
+                  <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body mb-5">
+                                <h1><i class="bi bi-question-circle "></i></h1>
+                                <h5 class="modal-title" id="exampleModalToggleLabel">Are you sure?</h5>
+                            </div>
+                            <div class="mb-3">
+                                <a href="{% url 'riwayatdata' %}" class="btn btn-primary">Cancel</a>
+                                <a href="{% url 'deleteitemkeluar' data.id %}" class="btn btn-danger">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                    </div>
+                  </div>
+                </center>
               </center>
-            </center>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-      {% elif get_kategori != "None" %}
-      <tbody>
-        {% for data in results %}
-        <tr>
-          <td>{{forloop.counter}}</td>
-          <td>{{data.date_masuk}}</td>
-          <td>{{data.date_keluar}}</td>
-          <td>{{ data.device }}</td>
-          <td>{{data.user}}</td>
-          <td>{{data.email}}</td>
-          <td>{{data.pc}}</td>
-          <td>{{data.os}}</td>
-          <td>{{data.cpu}}</td>
-          <td>{{data.vga}}</td>
-          <td>{{data.ram}}</td>
-          <td>{{data.model}}</td>
-          <td>{{data.serialnumber}}</td>
-          <td>{{data.kategori}}</td>
-          <td>{{data.description}}</td>
-          <td>
-            <center>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        {% elif get_kategori != "None" %}
+        <tbody>
+          {% for data in result %}
+          <tr>
+            <td>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                name="selected_items"
+                value="{{ data.id }}"
+              />
+            </td>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ data.date_masuk }}</td>
+            <td>{{ data.date_keluar }}</td>
+            <td>{{ data.device }}</td>
+            <td>{{ data.user }}</td>
+            <td>{{ data.email }}</td>
+            <td>{{ data.pclaptop }}</td>
+            <td>{{ data.os }}</td>
+            <td>{{ data.cpu }}</td>
+            <td>{{ data.vga }}</td>
+            <td>{{ data.ram }}</td>
+            <td>{{ data.model }}</td>
+            <td>{{ data.serialnumber }}</td>
+            <td>{{ data.kategori }}</td>
+            <td>{{ data.description }}</td>
+            <td>
               <center>
-                <a
-                  href="{% url 'deleteitemkeluar' data.id %}"
-                  class="btn btn-danger btn-sm"
-                  >Delete</a
-                >
+                <center>
+                  <a
+                    href="#"
+                    class="btn btn-danger btn-sm" data-bs-target="#exampleModalToggle" data-bs-toggle="modal"
+                    >Delete</a
+                  >
+                  <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body mb-5">
+                                <h1><i class="bi bi-question-circle "></i></h1>
+                                <h5 class="modal-title" id="exampleModalToggleLabel">Are you sure?</h5>
+                            </div>
+                            <div class="mb-3">
+                                <a href="{% url 'riwayatdata' %}" class="btn btn-primary">Cancel</a>
+                                <a href="{% url 'deleteitemkeluar' data.id %}" class="btn btn-danger">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                    </div>
+                  </div>
+                </center>
               </center>
-            </center>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-      {% endif %}
-    </table>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        {% endif %}
+
+        
+        
+      </table>
+      
+    </form>
   </div>
+  
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const deleteSelectedBtn = document.getElementById("deleteSelected");
+    const checkboxes = document.querySelectorAll("[name='selected_items']");
+  
+    deleteSelectedBtn.addEventListener("click", function () {
+      const selectedItems = [];
+  
+      checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+          selectedItems.push(checkbox.value);
+        }
+      });
+  
+      if (selectedItems.length > 0) {
+        const deleteForm = document.getElementById("deleteForm");
+        const input = document.createElement("input");
+  
+        input.setAttribute("type", "hidden");
+        input.setAttribute("name", "selected_items");
+        input.setAttribute("value", JSON.stringify(selectedItems));
+  
+        deleteForm.appendChild(input);
+        deleteForm.submit();
+  
+        input.remove();
+  
+        alert("Items deleted successfully.");
+  
+      } else {
+        alert("Please select at least one item.");
+      }
+    });
+  });
+  
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 {% endblock content %}

@@ -36,6 +36,7 @@ darkLight.addEventListener("click", () => {
   }
 });
 
+
 submenuItems.forEach((item, index) => {
   item.addEventListener("click", () => {
     item.classList.toggle("show_submenu");

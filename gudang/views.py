@@ -1,3 +1,5 @@
+import json
+from django.http import JsonResponse
 from .models import Kategori, BarangKeluar
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -19,16 +21,18 @@ from inventory import views
 import csv
 # Create your views here.
 
+
 def is_operator(user):
     if user.groups.filter(name="Operator").exists():
         return True
     else:
         return False
 
+
 @login_required
 def analitic(request):
     template_name = "analitic.html"
-    
+
     if request.user.groups.filter(name="Operator").exists():
         request.session['is_operator'] = 'operator'
 
@@ -44,21 +48,23 @@ def analitic(request):
     recent_activity = []
     for activity in recent_activity_masuk:
         recent_activity.append({
+            'nama': activity.nama,
             'device': activity.device,  # 'device' adalah nama field di model 'BarangMasuk
             'name': activity.user,
             'email': activity.email,
             'joined': activity.date,
             'type': 'Data Masuk',
-            'status': 'Liked'  # Anda dapat mengganti ini sesuai dengan kebutuhan
+            'status': 'Ok'  # Anda dapat mengganti ini sesuai dengan kebutuhan
         })
     for activity in recent_activity_keluar:
         recent_activity.append({
+            'nama': activity.nama,
             'device': activity.device,  # 'device' adalah nama field di model 'BarangKeluar
             'name': activity.user,
             'email': activity.email,
             'joined': activity.date_keluar,
             'type': 'Data Keluar',
-            'status': 'Liked'  # Anda dapat mengganti ini sesuai dengan kebutuhan
+            'status': 'Ok'  # Anda dapat mengganti ini sesuai dengan kebutuhan
         })
 
     context = {
@@ -100,6 +106,7 @@ def barangmasuk(request):
         serialnumber = request.POST.get('serialnumber')
         description = request.POST.get('description')
         kategori = request.POST.get('kategori')
+        penulis = request.user
         # jika data kategori tidak ada maka akan muncul pesan error
 
         if not kategori:
@@ -121,10 +128,12 @@ def barangmasuk(request):
                 model=model,
                 serialnumber=serialnumber,
                 description=description,
-                kategori=kat
+                kategori=kat,
+                nama=penulis
             )
             messages.success(
                 request, 'Data berhasil disimpan')
+            return redirect('barangmasuk')
 
     context = {
         'kategori': kategori,
@@ -142,13 +151,15 @@ def barangkeluar(request):
     template_name = "formbarangkeluar.html"
     kategori = Kategori.objects.all()
     kategori = Kategori.objects.all()
+    barangmasuk = BarangMasuk.objects.all()
     waktu_sekarang = datetime.now()
+    penulis = request.user
     format_tanggal = waktu_sekarang.strftime("%a %m %Y - %H:%M:%S")
-
     if request.method == 'POST':
         device = request.POST.get('device')
+        user = request.POST.get('user')
+        email = request.POST.get('email')
         existing_barang = BarangMasuk.objects.filter(device=device).first()
-
         if existing_barang:
             if 'submit_form' in request.POST:
                 # Jika tombol "Submit" ditekan, simpan data ke BarangKeluar
@@ -167,58 +178,96 @@ def barangkeluar(request):
                     'serialnumber': existing_barang.serialnumber,
                     'description': existing_barang.description,
                     'kategori': existing_barang.kategori.kategori,
+                    'nama': penulis
                 }
                 kat = Kategori.objects.get(
                     kategori=existing_barang.kategori.kategori)
                 # Simpan data ke BarangKeluar
-                BarangKeluar.objects.create(
-                    date_keluar=format_tanggal,
-                    date_masuk=existing_barang.date,
-                    device=device,
-                    user=existing_barang.user,
-                    email=existing_barang.email,
-                    pc=existing_barang.pc,
-                    os=existing_barang.os,
-                    cpu=existing_barang.cpu,
-                    vga=existing_barang.vga,
-                    ram=existing_barang.ram,
-                    model=existing_barang.model,
-                    serialnumber=existing_barang.serialnumber,
-                    description=existing_barang.description,
-                    kategori=kat
-                )
-                with transaction.atomic():
-                    existing_barang.delete()
-
-                messages.success(
-                    request, 'Data berhasil disimpan ke BarangKeluar dan dihapus dari BarangMasuk.')
-                return redirect('barangkeluar')  # Ubah ke URL yang sesuai
-
+                if not user or not email:
+                    BarangKeluar.objects.create(
+                        date_keluar=format_tanggal,
+                        date_masuk=existing_barang.date,
+                        device=device,
+                        user=existing_barang.user,
+                        email=existing_barang.email,
+                        pc=existing_barang.pc,
+                        os=existing_barang.os,
+                        cpu=existing_barang.cpu,
+                        vga=existing_barang.vga,
+                        ram=existing_barang.ram,
+                        model=existing_barang.model,
+                        serialnumber=existing_barang.serialnumber,
+                        description=existing_barang.description,
+                        kategori=kat,
+                        nama=penulis
+                    )
+                    with transaction.atomic():
+                        existing_barang.delete()
+                    messages.success(
+                        request, 'Data berhasil disimpan ke BarangKeluar dan dihapus dari BarangMasuk. ')
+                    return redirect('barangkeluar')
+                else:
+                    BarangKeluar.objects.create(
+                        date_keluar=format_tanggal,
+                        date_masuk=existing_barang.date,
+                        device=device,
+                        user=user,
+                        email=email,
+                        pc=existing_barang.pc,
+                        os=existing_barang.os,
+                        cpu=existing_barang.cpu,
+                        vga=existing_barang.vga,
+                        ram=existing_barang.ram,
+                        model=existing_barang.model,
+                        serialnumber=existing_barang.serialnumber,
+                        description=existing_barang.description,
+                        kategori=kat,
+                        nama=penulis
+                    )
+                    with transaction.atomic():
+                        existing_barang.delete()
+                    messages.success(
+                        request, 'Data berhasil disimpan ke BarangKeluar dan dihapus dari BarangMasuk.')
+                    return redirect('barangkeluar')  # Ubah ke URL yang sesuai
         else:
             messages.error(request, 'Device belum terdaftar.')
-
+    # form_data = {
+    #     'device': '',
+    #     'user': '',
+    #     'email': '',
+    #     'pc': '',
+    #     'os': '',
+    #     'cpu': '',
+    #     'vga': '',
+    #     'ram': '',
+    #     'model': '',
+    #     'serialnumber': '',
+    #     'description': '',
+    #     'kategori': '',
+    # }
     form_data = {
-        'device': '',
-        'user': '',
-        'email': '',
-        'pc': '',
-        'os': '',
-        'cpu': '',
-        'vga': '',
-        'ram': '',
-        'model': '',
-        'serialnumber': '',
-        'description': '',
-        'kategori': '',
-    }
+        'device': request.POST.get('device', ''),
+        'user': request.POST.get('user', ''),
+        'email': request.POST.get('email', ''),
+        'pc': request.POST.get('pc', ''),
+        'os': request.POST.get('os', ''),
+        'cpu': request.POST.get('cpu', ''),
+        'vga': request.POST.get('vga', ''),
+        'ram': request.POST.get('ram', ''),
+        'model': request.POST.get('model', ''),
+        'serialnumber': request.POST.get('serialnumber', ''),
+        'description': request.POST.get('description', ''),
+        'kategori': request.POST.get('kategori', ''),
 
+    }
     form = {
         'form_data': form_data,
         'kategori': kategori,
     }
-
     context = {
         'kategori': kategori,
+        'barangmasuk': barangmasuk,
+        'form': form,
     }
     return render(request, template_name, context,)
 
@@ -265,25 +314,25 @@ def editBarangMasuk(request, id):
         "item_value": get_item,
         "kategori": kategori,
     }
-
     return render(request, template_name, context)
 
 
 @login_required
 def deleteBarangMasuk(request, id):
     BarangMasuk.objects.get(id=id).delete()
+    messages.success(request, 'Data berhasil dihapus.')
     return redirect(tbdatabarang)
 
 
 @login_required
 def deleteBarangKeluar(request, id):
     BarangKeluar.objects.get(id=id).delete()
+    messages.success(request, 'Data berhasil dihapus.')
     return redirect(tbriwayatdata)
 
 
 @login_required
 def tbdatabarang(request):
-
     global results
     results = None
     template_name = "tbdatabarang.html"
@@ -350,6 +399,27 @@ def tbriwayatdata(request):
     return render(request, template_name, context)
 
 
+def delete_selected(request):
+    if request.method == "POST":
+        selected_items_str = request.POST.get(
+            "selected_items")  # Get the JSON string
+        # Parse the JSON string to a Python list
+        selected_items = json.loads(selected_items_str)
+
+        try:
+            for item_id in selected_items:
+                item = BarangKeluar.objects.get(id=item_id)
+                item.delete()
+
+            messages.success(request, "Items deleted successfully.")
+            return redirect(tbriwayatdata)
+        except Exception as e:
+            messages.error(request, "Error deleting items.")
+            return redirect(tbriwayatdata)
+    else:
+        return redirect(tbriwayatdata)
+
+
 def login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -365,10 +435,11 @@ def login(request):
     else:
         return render(request)
 
+
 @login_required
 @user_passes_test(is_operator)
 def register(request):
-    
+
     with transaction.atomic():
         if request.method == 'POST':
             username = request.POST.get('username')
@@ -384,22 +455,23 @@ def register(request):
                 return redirect(tbuser)
             else:
                 User.objects.create(
-                username = username,
-                password = make_password(get_password),
-                first_name = first_name,
-                last_name = last_name,
-                email = email,)
+                    username=username,
+                    password=make_password(get_password),
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email,)
                 messages.success(request, "User created successfully")
                 return redirect(tbuser)
         else:
             form = UserCreationForm()
-            
+
     context = {
         'title': 'Register',
         'form': form,
     }
-    
+
     return render(request, context)
+
 
 @login_required
 @user_passes_test(is_operator)
@@ -409,7 +481,6 @@ def editUser(request, id):
     user = User.objects.all()
     id_user = get_user.id
     print(get_user.id)
-    
 
     print(id_user)
     with transaction.atomic():
@@ -428,19 +499,16 @@ def editUser(request, id):
             get_user.last_name = last_name
             get_user.email = email
             get_user.save()
-        
+
             return redirect(tbuser)
-    
-    
-        
+
     context = {
-        "users" : get_user,
-        "id_user" : id_user,
-        "test" : "'',",
+        "users": get_user,
+        "id_user": id_user,
+        "test": "'',",
         'user': user,
     }
-    
-            
+
     return render(request, template_name, context)
 
 
@@ -458,15 +526,17 @@ def tbuser(request):
     id_user = 0
     context = {
         'user': user,
-        'id_user' : id_user
+        'id_user': id_user
     }
     return render(request, template_name, context)
+
 
 @login_required
 @user_passes_test(is_operator)
 def hapusUsers(request, id):
     User.objects.get(id=id).delete()
     return redirect(tbuser)
+
 
 def export_to_csv(request):
     riwayattb = BarangKeluar.objects.all()
@@ -476,8 +546,7 @@ def export_to_csv(request):
     writer.writerow(['Date Keluar', 'Date Masuk', 'Device', 'User', 'Email', 'Pc', 'Os', 'Cpu',
                     'Vga', 'Ram', 'Model', 'Serialnumber', 'Description', 'Kategori'])
     data_fields = riwayattb.values_list('date_keluar', 'date_masuk', 'device', 'user', 'email', 'pc', 'os', 'cpu',
-                    'vga', 'ram', 'model', 'serialnumber', 'description', 'kategori')
+                                        'vga', 'ram', 'model', 'serialnumber', 'description', 'kategori')
     for riwayattb in data_fields:
         writer.writerow(riwayattb)
     return response
-    

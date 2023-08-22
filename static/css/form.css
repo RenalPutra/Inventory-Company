@@ -80,7 +80,7 @@
 .container form{
     position: relative;
     margin-top: 16px;
-    min-height: 490px;
+    min-height: 533px;
     background-color: var(--white-color);
     overflow: hidden;
 }
