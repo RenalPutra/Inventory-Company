@@ -549,7 +549,7 @@ def export_to_csv(request):
     writer.writerow(['Date Keluar', 'Date Masuk', 'Device', 'User', 'Email', 'Pc', 'Os', 'Cpu',
                     'Vga', 'Ram', 'Model', 'Serialnumber', 'Description', 'Kategori'])
     data_fields = riwayattb.values_list('date_keluar', 'date_masuk', 'device', 'user', 'email', 'pc', 'os', 'cpu',
-                                        'vga', 'ram', 'model', 'serialnumber', 'description', 'kategori')
+                                        'vga', 'ram', 'model', 'serialnumber', 'description', 'kategori__kategori')
     for riwayattb in data_fields:
         writer.writerow(riwayattb)
     return response
