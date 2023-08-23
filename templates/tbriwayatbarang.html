@@ -88,13 +88,7 @@
       <table class="table">
         <thead>
           <tr>
-            <td>
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="selectAll"
-              />
-            </td>
+           
             <td class="col">No</td>
             <td class="col">DateIn</td>
             <td class="col">DeteOut</td>
@@ -173,7 +167,7 @@
         </tbody>
         {% elif get_search != "None" %}
         <tbody>
-          {% for data in result %}
+          {% for data in results %}
           <tr>
             <td>
               <input
@@ -231,7 +225,7 @@
         </tbody>
         {% elif get_kategori != "None" %}
         <tbody>
-          {% for data in result %}
+          {% for data in results %}
           <tr>
             <td>
               <input

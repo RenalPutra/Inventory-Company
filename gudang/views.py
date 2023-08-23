@@ -340,11 +340,12 @@ def tbdatabarang(request):
     kategori = Kategori.objects.all()
     get_kategori = str(request.POST.get('kategori'))
     get_search = request.POST.get('search')
+    print(get_search)
     search_category = BarangMasuk.objects.filter(
         kategori__kategori__contains=get_kategori)
     if get_search:
 
-        queries = Q(device__icontains=get_search) | Q(user__icontains=get_search) | Q(email__icontains=get_search) | Q(pc__icontains=get_search) | Q(os__icontains=get_search) | Q(
+        queries = Q(date__icontains=get_search) | Q(device__icontains=get_search) | Q(user__icontains=get_search) | Q(email__icontains=get_search) | Q(pc__icontains=get_search) | Q(os__icontains=get_search) | Q(
             cpu__icontains=get_search) | Q(vga__icontains=get_search) | Q(ram__icontains=get_search) | Q(model__icontains=get_search) | Q(serialnumber__icontains=get_search) | Q(description__icontains=get_search)
 
         results = BarangMasuk.objects.filter(queries)
@@ -375,17 +376,19 @@ def tbriwayatdata(request):
     kategori = Kategori.objects.all()
     get_kategori = str(request.POST.get('kategori'))
     get_search = request.POST.get('search')
+    print(get_kategori)
+    print(get_search)
     search_category = BarangKeluar.objects.filter(
         kategori__kategori__contains=get_kategori)
     if get_search:
 
-        queries = Q(device__icontains=get_search) | Q(user__icontains=get_search) | Q(email__icontains=get_search) | Q(pc__icontains=get_search) | Q(os__icontains=get_search) | Q(
+        queries = Q(date_masuk__icontains=get_search) | Q(date_keluar__icontains=get_search) | Q(device__icontains=get_search) | Q(user__icontains=get_search) | Q(email__icontains=get_search) | Q(pc__icontains=get_search) | Q(os__icontains=get_search) | Q(
             cpu__icontains=get_search) | Q(vga__icontains=get_search) | Q(ram__icontains=get_search) | Q(model__icontains=get_search) | Q(serialnumber__icontains=get_search) | Q(description__icontains=get_search)
 
-        results = barangsearch_category = BarangKeluar.objects.filter(queries)
+        results = BarangKeluar.objects.filter(queries)
 
     elif get_kategori:
-        results = barangsearch_category = BarangKeluar.objects.filter(
+        results = BarangKeluar.objects.filter(
             kategori__kategori__contains=get_kategori)
 
     context = {
