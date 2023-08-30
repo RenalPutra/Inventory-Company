@@ -23,6 +23,12 @@ class BarangKeluarAdmin(admin.ModelAdmin):
                    'vga', 'ram', 'model', 'serialnumber', 'description', 'kategori',)
 
 
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ['title', 'content', 'is_read', 'timestamp']
+    list_filter = ('title', 'content', 'is_read', 'timestamp')
+
+
 admin.site.register(Kategori, KategoriAdmin)
 admin.site.register(BarangMasuk, BarangMasukAdmin)
 admin.site.register(BarangKeluar, BarangKeluarAdmin)
+admin.site.register(Notification, NotificationAdmin)

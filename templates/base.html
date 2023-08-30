@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{% static 'css/form.css' %}">
     <title>inventory</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %} ">
+    <link rel="stylesheet" href="{% static 'css/style1.css' %} ">
     <style>
       .hover-effect:hover {
         opacity: 0.5;
@@ -163,7 +163,22 @@
 
       <div class="navbar_content">
         <i class='bx bx-sun' id="darkLight"></i>
-        <i class='bx bx-bell'></i>
+        <div class="dropdown">
+          <button class="btn dropdown-toggle" type="button" id="notificationIcon" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class='bx bx-bell'></i>
+              <span class="notification-badge" id="notificationCount">0</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationIcon">
+            <li class="dropdown-header">
+                <span>Unread Notifications</span>
+                <span class="delete-notifications">
+                    <a href="#" id="deleteAllNotifications" class='bx bx-trash'></a>
+                </span>
+            </li>
+            <div id="notificationList"></div>
+        </ul>
+      </div>
+      
         {% if request.session.is_operator == 'operator' %}
         <div class="dropdown">
             <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -235,6 +250,101 @@
         y.classList.toggle("d-none")
       })
     </script>
-    
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          const notificationIcon = document.getElementById("notificationIcon");
+          const notificationList = document.getElementById("notificationList");
+  
+          notificationIcon.addEventListener("click", function () {
+              fetch("{% url 'fetch_notifications' %}")
+                  .then(response => response.json())
+                  .then(data => {
+                      const notifications = data.notifications;
+                      notificationList.innerHTML = "";
+  
+                      if (notifications.length > 0) {
+                          notifications.forEach(notification => {
+                              const notificationItem = document.createElement("a");
+                              notificationItem.classList.add("dropdown-item");
+                              notificationItem.innerHTML = `
+                                  <h6>${notification.title}</h6>
+                                  <p>${notification.content}</p>
+                              `;
+                              notificationList.appendChild(notificationItem);
+                          });
+  
+                          // Mark notifications as read
+                          fetch("{% url 'mark_notifications_as_read' %}", {
+                              method: "POST",
+                              headers: {
+                                  "Content-Type": "application/x-www-form-urlencoded",
+                                  "X-CSRFToken": "{{ csrf_token }}"
+                              },
+                              body: new URLSearchParams({ notifications: notifications.map(notification => notification.id) })
+                          });
+                      } else {
+                          const noNotificationItem = document.createElement("a");
+                          noNotificationItem.classList.add("dropdown-item", "disabled");
+                          noNotificationItem.innerHTML = "No unread notifications.";
+                          notificationList.appendChild(noNotificationItem);
+                      }
+                  })
+                  .catch(error => {
+                      console.error("Error fetching notifications:", error);
+                  });
+          });
+      });
+  </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const notificationBadge = document.getElementById("notificationCount");
+
+    // Fetch unread notification count from the backend using AJAX
+    fetch("{% url 'get_unread_notification_count' %}")
+        .then(response => response.json())
+        .then(data => {
+            const unreadNotificationCount = data.unread_count;
+            notificationBadge.textContent = unreadNotificationCount;
+        })
+        .catch(error => {
+            console.error("Error fetching unread notification count:", error);
+        });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // ... kode lainnya ...
+
+  // Delete all notifications
+  const deleteAllNotificationsBtn = document.getElementById("deleteAllNotifications");
+  deleteAllNotificationsBtn.addEventListener("click", async function(event) {
+      event.preventDefault();
+
+      try {
+          const response = await fetch("{% url 'delete_all_notifications' %}", {
+              method: "POST",
+              headers: {
+                  "X-CSRFToken": "{{ csrf_token }}"
+              }
+          });
+
+          const data = await response.json();
+          if (data.message) {
+              // Successfully deleted all notifications
+              // Update the notification count to 0 and clear the list
+              const notificationCountElement = document.getElementById("notificationCount");
+              const notificationListElement = document.getElementById("notificationList");
+              notificationCountElement.textContent = "0";
+              notificationListElement.innerHTML = "";
+          } else {
+              console.error("Failed to delete notifications:", data.error);
+          }
+      } catch (error) {
+          console.error("Error deleting notifications:", error);
+      }
+  });
+});
+</script>
+
   </body>
 </html>

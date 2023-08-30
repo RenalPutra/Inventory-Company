@@ -121,8 +121,8 @@ footer a:hover {
   width: 100%;
   position: relative;
   background: url(../image/home-bg.jpg);
-  background-position: center 65%;
-  background-size: cover;
+  background-position: center 100%;
+  background-repeat: no-repeat;
   background-attachment: fixed;
 }
 

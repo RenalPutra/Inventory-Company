@@ -63,3 +63,13 @@ class BarangKeluar(models.Model):
 
     class Meta:
         verbose_name_plural = "barang keluar"
+
+
+class Notification(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    is_read = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

@@ -1,5 +1,6 @@
 import json
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from .models import Kategori, BarangKeluar
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -115,7 +116,7 @@ def barangmasuk(request):
             return redirect('barangmasuk')
         else:
             kat = Kategori.objects.get(kategori=kategori)
-            BarangMasuk.objects.create(
+            barang_masuk_data = BarangMasuk.objects.create(
                 date=format_tanggal,
                 device=device,
                 user=user,
@@ -131,6 +132,11 @@ def barangmasuk(request):
                 kategori=kat,
                 nama=penulis
             )
+            # Buat notifikasi
+            title = "Barang Masuk"
+            content = f"Barang {barang_masuk_data.device} telah masuk pada tanggal {barang_masuk_data.date}."
+            Notification.objects.create(title=title, content=content)
+
             messages.success(
                 request, 'Data berhasil disimpan')
             return redirect('barangmasuk')
@@ -184,7 +190,7 @@ def barangkeluar(request):
                     kategori=existing_barang.kategori.kategori)
                 # Simpan data ke BarangKeluar
                 if not user or not email:
-                    BarangKeluar.objects.create(
+                    barang_keluar_data = BarangKeluar.objects.create(
                         date_keluar=format_tanggal,
                         date_masuk=existing_barang.date,
                         device=device,
@@ -201,13 +207,17 @@ def barangkeluar(request):
                         kategori=kat,
                         nama=penulis
                     )
+                    title = "Barang Keluar"
+                    content = f"Barang {barang_keluar_data.device} telah keluar pada tanggal {barang_keluar_data.date_keluar}."
+                    Notification.objects.create(
+                        title=title, content=content)
                     with transaction.atomic():
                         existing_barang.delete()
                     messages.success(
                         request, 'Data berhasil disimpan ke BarangKeluar dan dihapus dari BarangMasuk. ')
                     return redirect('barangkeluar')
                 else:
-                    BarangKeluar.objects.create(
+                    barang_keluar_data = BarangKeluar.objects.create(
                         date_keluar=format_tanggal,
                         date_masuk=existing_barang.date,
                         device=device,
@@ -224,6 +234,10 @@ def barangkeluar(request):
                         kategori=kat,
                         nama=penulis
                     )
+                    title = "Barang Keluar"
+                    content = f"Barang {barang_keluar_data.device} telah keluar pada tanggal {barang_keluar_data.date_keluar}."
+                    Notification.objects.create(
+                        title=title, content=content)
                     with transaction.atomic():
                         existing_barang.delete()
                     messages.success(
@@ -553,3 +567,44 @@ def export_to_csv(request):
     for riwayattb in data_fields:
         writer.writerow(riwayattb)
     return response
+
+
+@csrf_exempt
+def fetch_notifications(request):
+    unread_notifications = Notification.objects.filter(
+        is_read=False).order_by("-timestamp")
+    notifications = [
+        {
+            "id": notification.id,
+            "title": notification.title,
+            "content": notification.content
+        }
+        for notification in unread_notifications
+    ]
+    return JsonResponse({"notifications": notifications})
+
+
+@csrf_exempt
+def mark_notifications_as_read(request):
+    if request.method == "POST":
+        notification_ids = request.POST.getlist("notifications")
+        Notification.objects.filter(
+            id__in=notification_ids, is_read=True).delete()
+        return JsonResponse({"message": "Notifications marked as read and deleted."})
+    return JsonResponse({"error": "Invalid request method."}, status=400)
+
+
+@csrf_exempt
+def get_unread_notification_count(request):
+    # Logic to get unread notification count from your database
+    unread_count = Notification.objects.filter(is_read=False).count()
+
+    return JsonResponse({"unread_count": unread_count})
+
+
+@csrf_exempt
+def delete_all_notifications(request):
+    if request.method == "POST":
+        Notification.objects.all().delete()
+        return JsonResponse({"message": "All notifications deleted."})
+    return JsonResponse({"error": "Invalid request method."}, status=400)
