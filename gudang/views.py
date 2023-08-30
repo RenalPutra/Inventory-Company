@@ -156,7 +156,6 @@ def barangmasuk(request):
 def barangkeluar(request):
     template_name = "formbarangkeluar.html"
     kategori = Kategori.objects.all()
-    kategori = Kategori.objects.all()
     barangmasuk = BarangMasuk.objects.all()
     waktu_sekarang = datetime.now()
     penulis = request.user
@@ -608,3 +607,31 @@ def delete_all_notifications(request):
         Notification.objects.all().delete()
         return JsonResponse({"message": "All notifications deleted."})
     return JsonResponse({"error": "Invalid request method."}, status=400)
+
+
+@login_required
+@user_passes_test(is_operator)
+def formkategory(request):
+    template_name = "formkategory.html"
+    kategori = Kategori.objects.all()
+
+    if request.method == 'POST':
+        # Mengambil data dari input dengan name="kategori"
+        kategori = request.POST.get('kategori')
+        Kategori.objects.create(
+            kategori=kategori)
+        # Ganti dengan URL yang sesuai setelah berhasil input
+        return redirect('kategory')
+    context = {
+        'kategori': kategori
+
+    }
+    return render(request, template_name, context)
+
+
+@login_required
+@user_passes_test(is_operator)
+def deletekategori(request, id):
+    Kategori.objects.get(id=id).delete()
+    messages.success(request, 'Kategori berhasil dihapus')
+    return redirect('kategory')

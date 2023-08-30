@@ -25,6 +25,9 @@ urlpatterns = [
          name="get_unread_notification_count"),
     path("delete_all_notifications", delete_all_notifications,
          name="delete_all_notifications"),
+    path("kategory", formkategory, name="kategory"),
+    path("deletekategori/<int:id>", deletekategori, name="deletekategori"),
+
 
 
 

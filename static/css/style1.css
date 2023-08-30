@@ -298,6 +298,9 @@ nav.close ~ .dashboard .top{
 .menu_dahsboard::before {
   content: "Dashboard";
 }
+.menu_datamaster::before {
+  content: "Data Master";
+}
 .menu_editor::before {
   content: "Editor";
 }

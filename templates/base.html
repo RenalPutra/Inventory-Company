@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="sweetalert2.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/form123.css' %}">
+    <link rel="stylesheet" href="{% static 'css/form2.css' %}">
     <title>inventory</title>
     <link rel="stylesheet" href="{% static 'css/style1.css' %} ">
     <style>
@@ -36,6 +37,25 @@
                 <i class="bi bi-bar-chart"></i>
               </span>
               <span class="navlink">Analytic</span>
+            </a>
+          </li>
+        </ul>
+        <ul class="menu_items">
+          <div class="menu_title menu_datamaster"></div>
+          <li class="item">
+            <a href="{% url 'kategory' %}" class="nav_link">
+              <span class="navlink_icon">
+                <i class="bi bi-database-add"></i>
+              </span>
+              <span class="navlink">Kategory</span>
+            </a>
+          </li>
+          <li class="item">
+            <a href="{% url 'analitic' %}" class="nav_link">
+              <span class="navlink_icon">
+                <i class="bi bi-database-add"></i>
+              </span>
+              <span class="navlink">Lokasi</span>
             </a>
           </li>
         </ul>

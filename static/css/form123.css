@@ -39,8 +39,22 @@
   }
 .container-fluid{
     position: relative;
-    max-width: 3000px;
-    width: 500%;
+    max-width: 1200px;
+    width: 100%;
+    border-radius: 6px;
+    padding: 30px;
+    margin:76px 20px 50px 15px;
+    background-color: var(--white-color);
+    border: var(--grey-color) ;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+
+}
+.container-grid{
+    position: relative;
+    max-width: 300px;
+    max-height: 200px;
+    height: 100%;
+    width: 100%;
     border-radius: 6px;
     padding: 30px;
     margin:76px 20px 50px 15px;
@@ -48,7 +62,6 @@
     border: var(--grey-color) ;
     box-shadow: 0 5px 10px rgba(0,0,0,0.1);
     font-family: 'Poppins', sans-serif;
-
 }
 .container{
     position: relative;
