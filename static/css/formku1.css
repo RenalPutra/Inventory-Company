@@ -21,17 +21,17 @@
   }
   body {
     background-color: #e7f2fd;
-    transition: all 0.5s ease;
+    transition: none;
     min-height: 100vh;
     /* display: flex; */
     align-items: center;
     justify-content: center;
     
   }
-  body.dark {
+  body.dark-theme {
     background-color: #333;
   }
-  body.dark {
+  body.dark-theme{
     --white-color: #333;
     --blue-color: #fff;
     --grey-color: #f2f2f2;
@@ -100,22 +100,22 @@
 .container form .form{
     position: absolute;
     background-color: var(--white-color);
-    transition: 0.3s ease;
+    transition: none;
 }
 .container form .form.second{
     opacity: 0;
     pointer-events: none;
-    transform: translateX(100%);
+    transform: none;
 }
 form.secActive .form.second{
     opacity: 1;
     pointer-events: auto;
-    transform: translateX(0);
+    transform: none;
 }
 form.secActive .form.first{
     opacity: 0;
     pointer-events: none;
-    transform: translateX(-100%);
+    transform: none;
 }
 .container form .title{
     display: block;
@@ -148,7 +148,7 @@ form .fields .input-field{
     font-weight: 400;
     color: #333;
     border-radius: 5px;
-    border: 1px solid #aaa;
+    border: 1px solid var(--grey-color);
     padding: 0 15px;
     height: 42px;
     margin: 8px 0;
@@ -177,7 +177,7 @@ form .fields .input-field{
     border-radius: 5px;
     margin: 25px 0;
     background-color: #4070f4;
-    transition: all 0.3s linear;
+    transition: none;
     cursor: pointer;
 }
 .container form .btnText{
@@ -192,7 +192,7 @@ form .backBtn i{
     margin: 0 6px;
 }
 form .backBtn i{
-    transform: rotate(180deg);
+    transform: none;
 }
 form .buttons{
     display: flex;

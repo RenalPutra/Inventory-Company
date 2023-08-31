@@ -11,10 +11,9 @@
     <link rel="stylesheet" href="sweetalert2.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{% static 'css/form123.css' %}">
-    <link rel="stylesheet" href="{% static 'css/form2.css' %}">
+    <link rel="stylesheet" href="{% static 'css/formku1.css' %}">
     <title>inventory</title>
-    <link rel="stylesheet" href="{% static 'css/style1.css' %} ">
+    <link rel="stylesheet" href="{% static 'css/styleku1.css' %} ">
     <style>
       .hover-effect:hover {
         opacity: 0.5;
@@ -184,7 +183,7 @@
       <div class="navbar_content">
         <i class='bx bx-sun' id="darkLight"></i>
         <div class="dropdown">
-          <button class="btn dropdown-toggle" type="button" id="notificationIcon" data-bs-toggle="dropdown" aria-expanded="false">
+          <button class="btn dropdown-toggle title" type="button" id="notificationIcon" data-bs-toggle="dropdown" aria-expanded="false">
               <i class='bx bx-bell'></i>
               <span class="notification-badge" id="notificationCount">0</span>
           </button>
@@ -201,7 +200,7 @@
       
         {% if request.session.is_operator == 'operator' %}
         <div class="dropdown">
-            <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="btn dropdown-toggle title" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
               <i class='bx bx-user'></i>  Hi, {{ request.user.username|truncatechars:10 }}
             </button>
             <ul class="dropdown-menu" aria-labelledby="userDropdown">
@@ -252,7 +251,7 @@
     {% comment %} <script src="script.js"></script> {% endcomment %}
     
     <script src="sweetalert2.min.js"></script>
-    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/scripthero.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <script>
@@ -365,6 +364,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 </script>
+
 
   </body>
 </html>
