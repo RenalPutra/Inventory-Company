@@ -612,7 +612,7 @@ def delete_all_notifications(request):
 @login_required
 @user_passes_test(is_operator)
 def formkategory(request):
-    template_name = "formkategory.html"
+    template_name = "categoryForm.html"
     kategori = Kategori.objects.all()
 
     if request.method == 'POST':
@@ -628,6 +628,25 @@ def formkategory(request):
     }
     return render(request, template_name, context)
 
+@login_required
+@user_passes_test(is_operator)
+def formlokasi(request):
+    template_name = "lokasiTable.html"
+    lokasi = Lokasi.objects.all()
+
+    if request.method == 'POST':
+        # Mengambil data dari input dengan name="kategori"
+        lokasi = request.POST.get('lokasi')
+        Lokasi.objects.create(
+            lokasi=lokasi)
+        # Ganti dengan URL yang sesuai setelah berhasil input
+        return redirect(formlokasi)
+    context = {
+        'lokasi': lokasi
+
+    }
+    return render(request, template_name, context)
+
 
 @login_required
 @user_passes_test(is_operator)
@@ -635,3 +654,10 @@ def deletekategori(request, id):
     Kategori.objects.get(id=id).delete()
     messages.success(request, 'Kategori berhasil dihapus')
     return redirect('kategory')
+
+@login_required
+@user_passes_test(is_operator)
+def deletelokasi(request, id):
+    Lokasi.objects.get(id=id).delete()
+    messages.success(request, 'Lokasi berhasil dihapus')
+    return redirect(formlokasi)

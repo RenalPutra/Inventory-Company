@@ -27,6 +27,8 @@ urlpatterns = [
          name="delete_all_notifications"),
     path("kategory", formkategory, name="kategory"),
     path("deletekategori/<int:id>", deletekategori, name="deletekategori"),
+    path("lokasi", formlokasi, name="lokasi"),
+    path("deletelokasi/<int:id>", deletelokasi, name="deletelokasi"),
 
 
 

@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 
 # buat databse sesuai dengan form input
 
-
 class Kategori(models.Model):
     kategori = models.CharField(max_length=100)
 
@@ -14,6 +13,14 @@ class Kategori(models.Model):
 
     class Meta:
         verbose_name_plural = "kategori"
+class Lokasi(models.Model):
+    lokasi = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.lokasi
+
+    class Meta:
+        verbose_name_plural = "lokasi"
 
 
 class BarangMasuk(models.Model):
@@ -22,7 +29,7 @@ class BarangMasuk(models.Model):
     date = models.CharField(max_length=100)
     device = models.TextField(max_length=100)
     user = models.TextField(max_length=100)
-    email = models.TextField(max_length=100)
+    
     pc = models.TextField(max_length=100)
     os = models.TextField(max_length=100)
     cpu = models.TextField(max_length=100)
@@ -32,6 +39,8 @@ class BarangMasuk(models.Model):
     serialnumber = models.TextField(max_length=100)
     description = models.TextField(max_length=100)
     kategori = models.ForeignKey(Kategori, on_delete=models.CASCADE)
+    lokasi = models.ForeignKey(Lokasi, on_delete=models.CASCADE, blank=True, null=True)
+    
 
     def __str__(self):
         return self.device + ' - ' + self.user
@@ -47,7 +56,7 @@ class BarangKeluar(models.Model):
     date_masuk = models.CharField(max_length=100, blank=True, null=True)
     device = models.TextField(max_length=100)
     user = models.TextField(max_length=100)
-    email = models.TextField(max_length=100)
+    
     pc = models.TextField(max_length=100)
     os = models.TextField(max_length=100)
     cpu = models.TextField(max_length=100)
@@ -57,7 +66,8 @@ class BarangKeluar(models.Model):
     serialnumber = models.TextField(max_length=100)
     description = models.TextField(max_length=100)
     kategori = models.ForeignKey(Kategori, on_delete=models.CASCADE)
-
+    lokasi = models.ForeignKey(Lokasi, on_delete=models.CASCADE, blank=True, null=True)
+    
     def __str__(self):
         return self.device + ' - ' + self.user
 

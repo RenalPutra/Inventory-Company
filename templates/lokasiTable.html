@@ -1,0 +1,120 @@
+{% extends "base.html" %} {% block content %}
+<div class="container rounded-1">
+  <h2 class="title">Tabel Lokasi</h2>
+  <br />
+  <button
+    class="btn btn-success mt-2"
+    data-bs-toggle="modal"
+    data-bs-target="#loginModal"
+  >
+    Tambah Lokasi
+  </button>
+  <br />
+
+  <br />
+  <div class="row">
+    <table class="table">
+      <thead>
+        <tr>
+          <td>No</td>
+          <td>Name Location</td>
+          <td>Actions</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for k in lokasi %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+
+          <td>{{ k.lokasi }}</td>
+
+          <td>
+            <a
+              href="#"
+              class="btn btn-danger btn-sm delete-button"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModalToggle{{ k.id }}"
+              >Delete</a
+            >
+            <center>
+              <div
+                class="modal fade"
+                id="exampleModalToggle{{ k.id }}"
+                aria-hidden="true"
+                aria-labelledby="exampleModalToggleLabel"
+                tabindex="-1"
+              >
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-body mb-5">
+                      <h1><i class="bi bi-question-circle"></i></h1>
+                      <h5 class="modal-title" id="exampleModalToggleLabel">
+                        Are you sure?
+                      </h5>
+                    </div>
+                    <div class="mb-3">
+                      <a
+                        href="#"
+                        class="btn btn-primary"
+                        data-bs-dismiss="modal"
+                        >Cancel</a
+                      >
+                      <a
+                        href="{% url 'deletelokasi' k.id %}"
+                        class="btn btn-danger"
+                        >Delete</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </center>
+          </td>
+        </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<!--Register-->
+<div
+  class="modal fade"
+  id="loginModal"
+  tabindex="-1"
+  aria-labelledby="loginModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalLabel">Tambah Lokasi</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'lokasi' %}" method="POST">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="firstname" class="form-label">Lokasi</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lokasi"
+              name="lokasi"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Tambah</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
