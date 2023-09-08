@@ -25,10 +25,26 @@
                             <input type="text" placeholder="Enter your user" name="user" value="{{item_value.user}}">
                         </div>
 
-                        <div class="input-field">
+                        {% comment %} <div class="input-field">
                             <label>Email</label>
                             <input type="text" placeholder="Enter your email" name="email" value="{{item_value.email}}">
+                        </div> {% endcomment %}
+                        <div class="input-field">
+                            <label>Lokasi</label>
+                            <select required name="lokasi" placeholder="Enter location">
+                                {% if item_value.lokasi == null %}
+                                <option disabled selected required>Select kategory</option>
+                                {% endif %}
+                                {% for k in lokasi %}
+                                {% if  item_value.lokasi == k %}
+                                <option value="{{item_value.lokasi}}">{{item_value.lokasi}}</option>
+                                {% else %}
+                                <option value="{{k.lokasi}}">{{k.lokasi}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
                         </div>
+                        
 
                         <div class="input-field">
                             <label>PC/Laptop</label>

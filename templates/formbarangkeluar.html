@@ -26,7 +26,7 @@
                             <select name="device" id="deviceSelect" required>
                                 <option disabled selected>Select device</option>
                                 {% for barang_masuk in barangmasuk %}
-                                <option value="{{ barang_masuk.device }}" data-user="{{ barang_masuk.user }}" data-email="{{ barang_masuk.email }}" data-pc="{{ barang_masuk.pc }}" data-os="{{ barang_masuk.os }}" data-cpu="{{ barang_masuk.cpu }}" data-vga="{{ barang_masuk.vga }}" data-ram="{{ barang_masuk.ram }}" data-model="{{ barang_masuk.model }}" data-serialnumber="{{ barang_masuk.serialnumber }}" data-description="{{ barang_masuk.description }}" data-kategori="{{ barang_masuk.kategori.kategori }}">
+                                <option value="{{ barang_masuk.device }}" data-user="{{ barang_masuk.user }}" data-lokasi="{{ barang_masuk.lokasi }}" data-pc="{{ barang_masuk.pc }}" data-os="{{ barang_masuk.os }}" data-cpu="{{ barang_masuk.cpu }}" data-vga="{{ barang_masuk.vga }}" data-ram="{{ barang_masuk.ram }}" data-model="{{ barang_masuk.model }}" data-serialnumber="{{ barang_masuk.serialnumber }}" data-description="{{ barang_masuk.description }}" data-kategori="{{ barang_masuk.kategori.kategori }}">
                                     {{ barang_masuk.device }}
                                 </option>
                                 {% endfor %}
@@ -38,8 +38,8 @@
                         </div>
 
                         <div class="input-field">
-                            <label>Email</label>
-                            <input type="text" placeholder="Enter your email" name="email" >
+                            <label>Lokasi</label>
+                            <input type="text" placeholder="Enter your location" name="lokasi" >
                         </div>
 
                         <div class="input-field">
@@ -106,7 +106,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         const deviceSelect = document.getElementById("deviceSelect");
         const userField = document.querySelector("[name='user']");
-        const emailField = document.querySelector("[name='email']");
+        const lokasiField = document.querySelector("[name='lokasi']");
         const pcField = document.querySelector("[name='pc']");
         const osField = document.querySelector("[name='os']");
         const cpuField = document.querySelector("[name='cpu']");
@@ -122,7 +122,7 @@
             const selectedDevice = deviceSelect.value;
             const selectedOption = deviceSelect.querySelector(`[value='${selectedDevice}']`);
             userField.value = selectedOption.dataset.user;
-            emailField.value = selectedOption.dataset.email;
+            lokasiField.value = selectedOption.dataset.lokasi;
             pcField.value = selectedOption.dataset.pc;
             osField.value = selectedOption.dataset.os;
             cpuField.value = selectedOption.dataset.cpu;

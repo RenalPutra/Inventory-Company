@@ -52,7 +52,7 @@ def analitic(request):
             'nama': activity.nama,
             'device': activity.device,  # 'device' adalah nama field di model 'BarangMasuk
             'name': activity.user,
-            'email': activity.email,
+            'lokasi': activity.lokasi,
             'joined': activity.date,
             'type': 'Data Masuk',
             'status': 'Ok'  # Anda dapat mengganti ini sesuai dengan kebutuhan
@@ -62,7 +62,7 @@ def analitic(request):
             'nama': activity.nama,
             'device': activity.device,  # 'device' adalah nama field di model 'BarangKeluar
             'name': activity.user,
-            'email': activity.email,
+            'lokasi': activity.lokasi,
             'joined': activity.date_keluar,
             'type': 'Data Keluar',
             'status': 'Ok'  # Anda dapat mengganti ini sesuai dengan kebutuhan
@@ -92,12 +92,13 @@ def dashboard(request):
 def barangmasuk(request):
     template_name = "formbarangmasuk.html"
     kategori = Kategori.objects.all()
+    lokasi = Lokasi.objects.all()
     waktu_sekarang = datetime.now()
     format_tanggal = waktu_sekarang.strftime("%a %m %Y - %H:%M:%S")
     if request.method == 'POST':
         device = request.POST.get('device')
         user = request.POST.get('user')
-        email = request.POST.get('email')
+        lokasi = request.POST.get('lokasi')
         pc = request.POST.get('pc')
         os = request.POST.get('os')
         cpu = request.POST.get('cpu')
@@ -116,11 +117,12 @@ def barangmasuk(request):
             return redirect('barangmasuk')
         else:
             kat = Kategori.objects.get(kategori=kategori)
+            lok = Lokasi.objects.get(lokasi=lokasi)
             barang_masuk_data = BarangMasuk.objects.create(
                 date=format_tanggal,
                 device=device,
                 user=user,
-                email=email,
+                lokasi=lok,
                 pc=pc,
                 os=os,
                 cpu=cpu,
@@ -143,6 +145,7 @@ def barangmasuk(request):
 
     context = {
         'kategori': kategori,
+        'lokasi': lokasi,
     }
 
     return render(request, template_name, context)
@@ -156,6 +159,7 @@ def barangmasuk(request):
 def barangkeluar(request):
     template_name = "formbarangkeluar.html"
     kategori = Kategori.objects.all()
+    lokasi = Lokasi.objects.all()
     barangmasuk = BarangMasuk.objects.all()
     waktu_sekarang = datetime.now()
     penulis = request.user
@@ -163,7 +167,6 @@ def barangkeluar(request):
     if request.method == 'POST':
         device = request.POST.get('device')
         user = request.POST.get('user')
-        email = request.POST.get('email')
         existing_barang = BarangMasuk.objects.filter(device=device).first()
         if existing_barang:
             if 'submit_form' in request.POST:
@@ -173,7 +176,7 @@ def barangkeluar(request):
                     'date_masuk': existing_barang.date,
                     'device': existing_barang.device,
                     'user': existing_barang.user,
-                    'email': existing_barang.email,
+                    'lokasi': existing_barang.lokasi,
                     'pc': existing_barang.pc,
                     'os': existing_barang.os,
                     'cpu': existing_barang.cpu,
@@ -187,14 +190,17 @@ def barangkeluar(request):
                 }
                 kat = Kategori.objects.get(
                     kategori=existing_barang.kategori.kategori)
+                lok = Lokasi.objects.get(
+                    lokasi=existing_barang.lokasi.lokasi)
+
                 # Simpan data ke BarangKeluar
-                if not user or not email:
+                if not user:
                     barang_keluar_data = BarangKeluar.objects.create(
                         date_keluar=format_tanggal,
                         date_masuk=existing_barang.date,
                         device=device,
                         user=existing_barang.user,
-                        email=existing_barang.email,
+                        lokasi=lok,
                         pc=existing_barang.pc,
                         os=existing_barang.os,
                         cpu=existing_barang.cpu,
@@ -221,7 +227,7 @@ def barangkeluar(request):
                         date_masuk=existing_barang.date,
                         device=device,
                         user=user,
-                        email=email,
+                        lokasi=lok,
                         pc=existing_barang.pc,
                         os=existing_barang.os,
                         cpu=existing_barang.cpu,
@@ -231,7 +237,7 @@ def barangkeluar(request):
                         serialnumber=existing_barang.serialnumber,
                         description=existing_barang.description,
                         kategori=kat,
-                        nama=penulis
+                        nama=penulis,
                     )
                     title = "Barang Keluar"
                     content = f"Barang {barang_keluar_data.device} telah keluar pada tanggal {barang_keluar_data.date_keluar}."
@@ -261,7 +267,7 @@ def barangkeluar(request):
     form_data = {
         'device': request.POST.get('device', ''),
         'user': request.POST.get('user', ''),
-        'email': request.POST.get('email', ''),
+        'lokasi': request.POST.get('lokasi', ''),
         'pc': request.POST.get('pc', ''),
         'os': request.POST.get('os', ''),
         'cpu': request.POST.get('cpu', ''),
@@ -279,6 +285,7 @@ def barangkeluar(request):
     }
     context = {
         'kategori': kategori,
+        'lokasi': lokasi,
         'barangmasuk': barangmasuk,
         'form': form,
     }
@@ -290,11 +297,13 @@ def editBarangMasuk(request, id):
     template_name = "formbarangmasuk.html"
     get_item = BarangMasuk.objects.get(id=id)
     kategori = Kategori.objects.all()
+    lokasi = Lokasi.objects.all()
 
     if request.method == 'POST':
         device = request.POST.get('device')
         user = request.POST.get('user')
-        email = request.POST.get('email')
+        lokasi_name = request.POST.get('lokasi')
+        lok = Lokasi.objects.get(lokasi=lokasi_name)
         pc = request.POST.get('pc')
         os = request.POST.get('os')
         cpu = request.POST.get('cpu')
@@ -309,7 +318,7 @@ def editBarangMasuk(request, id):
 
         get_item.device = device
         get_item.user = user
-        get_item.email = email
+        get_item.lokasi = lok
         get_item.pc = pc
         get_item.os = os
         get_item.cpu = cpu
@@ -326,6 +335,8 @@ def editBarangMasuk(request, id):
     context = {
         "item_value": get_item,
         "kategori": kategori,
+        "lokasi": lokasi,
+
     }
     return render(request, template_name, context)
 
@@ -628,6 +639,7 @@ def formkategory(request):
     }
     return render(request, template_name, context)
 
+
 @login_required
 @user_passes_test(is_operator)
 def formlokasi(request):
@@ -654,6 +666,7 @@ def deletekategori(request, id):
     Kategori.objects.get(id=id).delete()
     messages.success(request, 'Kategori berhasil dihapus')
     return redirect('kategory')
+
 
 @login_required
 @user_passes_test(is_operator)
