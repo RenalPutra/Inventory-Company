@@ -466,38 +466,52 @@ def login(request):
 @login_required
 @user_passes_test(is_operator)
 def register(request):
-
     with transaction.atomic():
         if request.method == 'POST':
-            username = request.POST.get('username')
-            get_password = request.POST.get('password')
-            first_name = request.POST.get('first_name')
-            last_name = request.POST.get('last_name')
-            email = request.POST.get('email')
-            if User.objects.filter(username=username).exists():
+            first_name = request.POST['first_name']
+            last_name = request.POST['last_name']
+            username = request.POST['username']
+            email = request.POST['email']
+            get_password = request.POST['password']
+            role = request.POST.get('role')  # Ambil peran dari formulir
+            print(role)
+            if User.objects.filter(username=email).exists():
                 messages.error(request, "Username already exists")
                 return redirect(tbuser)
-            elif User.objects.filter(email=email).exists():
+            elif User.objects.filter(email=username).exists():
                 messages.error(request, "Email already exists")
                 return redirect(tbuser)
             else:
-                User.objects.create(
-                    username=username,
+                user = User.objects.create(
+                    username=email,
                     password=make_password(get_password),
                     first_name=first_name,
                     last_name=last_name,
-                    email=email,)
+                    email=username,)
+                if role == 'superadmin':
+                    user.is_staff = True
+                    user.is_superuser = True
+                else:
+                    user.is_staff = False
+                    user.is_superuser = False
+
+                user.save()
                 messages.success(request, "User created successfully")
                 return redirect(tbuser)
+
+        # Atur peran pengguna berdasarkan pilihan
+
+        # Autentikasi pengguna dan masukkan ke dalam sesi
+        user = authenticate(request, username=username, password=get_password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, "Registrasi berhasil.")
+            # Ganti dengan URL halaman setelah pendaftaran
+            return redirect('dashboard')
         else:
-            form = UserCreationForm()
+            messages.error(request, "Registrasi gagal. Silakan coba lagi.")
 
-    context = {
-        'title': 'Register',
-        'form': form,
-    }
-
-    return render(request, context)
+    return render(request, 'registration/register.html')
 
 
 @login_required
@@ -517,14 +531,18 @@ def editUser(request, id):
             first_name = request.POST.get('first_name')
             last_name = request.POST.get('last_name')
             email = request.POST.get('email')
-            print(first_name)
-            print(last_name)
-
-            get_user.username = username
+            role = request.POST.get('role')
+            if role == 'superadmin':
+                get_user.is_staff = True
+                get_user.is_superuser = True
+            else:
+                get_user.is_staff = False
+                get_user.is_superuser = False
+            get_user.username = email
             get_user.password = make_password(get_password)
             get_user.first_name = first_name
             get_user.last_name = last_name
-            get_user.email = email
+            get_user.email = username
             get_user.save()
 
             return redirect(tbuser)
@@ -562,6 +580,7 @@ def tbuser(request):
 @user_passes_test(is_operator)
 def hapusUsers(request, id):
     User.objects.get(id=id).delete()
+    messages.success(request, "User has ben delete")
     return redirect(tbuser)
 
 

@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{% static 'css/formku1.css' %}">
     <title>inventory</title>
-    <link rel="stylesheet" href="{% static 'css/styleku1.css' %} ">
+    <link rel="stylesheet" href="{% static 'css/styleku2.css' %} ">
     <style>
       .hover-effect:hover {
         opacity: 0.5;
@@ -177,7 +177,7 @@
     <nav class="navbar">
       <div class="logo_item">
         <i class="bx bx-menu" id="sidebarOpen"></i>
-        <img src="{% static 'image/logo.png'%}" alt=""></i>CodingNepal
+        <img src="{% static 'image/bayanlogo.png'%}" alt=""></i>PT. Bayan Resources, Tbk
       </div>
 
       <div class="navbar_content">
@@ -201,7 +201,7 @@
         {% if request.session.is_operator == 'operator' %}
         <div class="dropdown">
             <button class="btn dropdown-toggle title" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class='bx bx-user'></i>  Hi, {{ request.user.username|truncatechars:10 }}
+              <i class='bx bx-user'></i>  Hi, {{ request.user.email|truncatechars:10 }}
             </button>
             <ul class="dropdown-menu" aria-labelledby="userDropdown">
                 <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
@@ -211,7 +211,7 @@
         {% else %}
         <div class="dropdown">
           <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class='bx bx-user'></i>  Hi, {{ request.user.username|truncatechars:10 }}
+            <i class='bx bx-user'></i>  Hi, {{ request.user.email|truncatechars:10 }}
           </button>
           <ul class="dropdown-menu" aria-labelledby="userDropdown">
               <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>

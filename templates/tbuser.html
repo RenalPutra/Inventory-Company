@@ -1,4 +1,5 @@
 {% extends "base.html" %} {% block content %}
+<link rel="stylesheet" href="sweetalert2.min.css">
 <div class="container rounded-1">
   <h2 class="title ">Daftar Pengguna</h2>
   <br />
@@ -25,10 +26,11 @@
       <thead>
         <tr>
           <td>No</td>
+          <td>email</td>
           <td>Username</td>
           <td>first name</td>
           <td>last name</td>
-          <td>email</td>
+         
           <td>Status</td>
           <td>Action</td>
         </tr>
@@ -44,9 +46,10 @@
               >{{ a.username }}</a
             >
           </td>
+          <td>{{ a.email }}</td>
           <td>{{ a.first_name }}</td>
           <td>{{ a.last_name }}</td>
-          <td>{{ a.email }}</td>
+          
           <td>
             {% if a.is_staff%}
             <span class="badge bg-success">Super Admin</span>
@@ -94,56 +97,34 @@
           {% csrf_token %}
           <div class="mb-3">
             <label for="firstname" class="form-label">firstname</label>
-            <input
-              type="text"
-              class="form-control"
-              id="username"
-              name="first_name"
-              required
-            />
+            <input type="text" class="form-control" id="firstname" name="first_name" required />
           </div>
           <div class="mb-3">
             <label for="lastname" class="form-label">lastname</label>
-            <input
-              type="text"
-              class="form-control"
-              id="username"
-              name="last_name"
-              required
-            />
+            <input type="text" class="form-control" id="lastname" name="last_name" required />
           </div>
           <div class="mb-3">
             <label for="username" class="form-label">username</label>
-            <input
-              type="text"
-              class="form-control"
-              id="username"
-              name="username"
-              required
-            />
+            <input type="text" class="form-control" id="username" name="username" required />
           </div>
           <div class="mb-3">
             <label for="email" class="form-label">email</label>
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              name="email"
-              required
-            />
+            <input type="email" class="form-control" id="email" name="email" required />
           </div>
           <div class="mb-3">
             <label for="password" class="form-label">password</label>
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              name="password"
-              required
-            />
+            <input type="password" class="form-control" id="password" name="password" required />
           </div>
-          <button type="submit" class="btn btn-primary">register</button>
+          <div class="mb-3">
+            <label for="role" class="form-label">Role</label>
+            <select class="form-select" id="role" name="role" required>
+              <option value="admin">Admin</option>
+              <option value="superadmin">Super Admin</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Register</button>
         </form>
+        
       </div>
     </div>
   </div>
@@ -199,7 +180,7 @@
               class="form-control"
               id="username"
               name="username"
-              value="{{users.username}}"
+              value="{{users.email}}"
               required
             />
           </div>
@@ -210,7 +191,7 @@
               class="form-control"
               id="email"
               name="email"
-              value="{{users.email}}"
+              value="{{users.username}}"
               required
             />
           </div>
@@ -225,11 +206,19 @@
               required
             />
           </div>
+          <div class="mb-3">
+            <label for="role" class="form-label">Role</label>
+            <select class="form-select" id="role" name="role" required>
+              <option value="admin">Admin</option>
+              <option value="superadmin">Super Admin</option>
+            </select>
+          </div>
           <button type="submit" class="btn btn-primary">Update</button>
         </form>
       </div>
     </div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!--end edit-->
 {% endblock content %}

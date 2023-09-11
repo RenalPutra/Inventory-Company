@@ -75,15 +75,15 @@ td {
   text-decoration: underline;
   
 }
-
-
 .logo_item {
   display: flex;
   align-items: center;
   column-gap: 10px;
   font-size: 22px;
   font-weight: 500;
-  color: var(--blue-color);
+  background: linear-gradient(45deg, #007bff, #ffc107, #ff5722);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; 
 }
 .navbar img {
   width: 35px;
