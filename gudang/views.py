@@ -451,6 +451,7 @@ def login(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth_login(request, user)
@@ -539,7 +540,10 @@ def editUser(request, id):
                 get_user.is_staff = False
                 get_user.is_superuser = False
             get_user.username = email
-            get_user.password = make_password(get_password)
+            if get_password == get_user.password:
+                get_user.password = get_password
+            elif get_password != get_user.password:
+                get_user.password = make_password(get_password)
             get_user.first_name = first_name
             get_user.last_name = last_name
             get_user.email = username
@@ -589,9 +593,9 @@ def export_to_csv(request):
     response = HttpResponse('')
     response['Content-Disposition'] = 'attachment; filename=riwayat_data_export.csv'
     writer = csv.writer(response)
-    writer.writerow(['Date Keluar', 'Date Masuk', 'Device', 'User', 'Email', 'Pc', 'Os', 'Cpu',
+    writer.writerow(['Date Keluar', 'Date Masuk', 'Device', 'User', 'Lokasi', 'Pc', 'Os', 'Cpu',
                     'Vga', 'Ram', 'Model', 'Serialnumber', 'Description', 'Kategori'])
-    data_fields = riwayattb.values_list('date_keluar', 'date_masuk', 'device', 'user', 'email', 'pc', 'os', 'cpu',
+    data_fields = riwayattb.values_list('date_keluar', 'date_masuk', 'device', 'user', 'lokasi', 'pc', 'os', 'cpu',
                                         'vga', 'ram', 'model', 'serialnumber', 'description', 'kategori__kategori')
     for riwayattb in data_fields:
         writer.writerow(riwayattb)
