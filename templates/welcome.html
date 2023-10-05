@@ -9,6 +9,7 @@
     <title>Camping Gear Website | CodingNepal</title>
     <link rel="stylesheet" href="{% static 'css/login.css' %}" />
     <!-- Fontawesome Link for Icons -->
+    <link rel="stylesheet" href="sweetalert2.min.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
@@ -37,23 +38,11 @@
               {% csrf_token %}
               <div
                 class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start"
-              >
-                <p class="lead fw-normal mb-0 me-3">Sign in with</p>
-                <button type="button" class="btn btn-primary btn-floating mx-1">
-                  <i class="fab fa-facebook-f"></i>
-                </button>
-
-                <button type="button" class="btn btn-primary btn-floating mx-1">
-                  <i class="fab fa-twitter"></i>
-                </button>
-
-                <button type="button" class="btn btn-primary btn-floating mx-1">
-                  <i class="fab fa-linkedin-in"></i>
-                </button>
+                >
               </div>
 
               <div class="divider d-flex align-items-center my-4">
-                <p class="text-center fw-bold mx-3 mb-0">Or</p>
+                <p class="text-center fw-bold mx-3 mb-0">LOGIN</p>
               </div>
 
               <!-- Email input -->
@@ -104,5 +93,20 @@
         <!-- Right -->
       </div>
     </section>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="sweetalert2.min.js"></script>
+    {% for msg in messages%} {% if msg.tags == 'error' %}
+    <script>
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "{{ msg }}",
+      });
+    </script>
+    {% else %}
+    <script>
+      Swal.fire("{{ msg }}", "You clicked the button!", "success");
+    </script>
+    {% endif %} {% endfor %}
   </body>
 </html>

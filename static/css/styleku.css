@@ -11,7 +11,9 @@
   --blue-color: #4070f4;
   --grey-color: #707070;
   --grey-color-light: #aaa;
+  --greynav-color: #e7e7e7;
 }
+
 body {
   background-color: #e7f2fd;
   transition: none;
@@ -24,6 +26,7 @@ body.dark-theme {
   --blue-color: #fff;
   --grey-color: #f2f2f2;
   --grey-color-light: #aaa;
+  --greynav-color: #4d4d4d;
 }
 td.col {
   color: var(--grey-color);
@@ -189,7 +192,6 @@ nav.close ~ .dashboard .top {
   padding: 1px 20px;
   padding-bottom: 20px;
   transition: none;
-  border-radius: 12px;
   background-color: var(--white-color);
 }
 .dash-content .title {
@@ -432,6 +434,23 @@ nav.close ~ .dashboard .top {
   margin-top: calc(-1 * var(--bs-gutter-y));
   margin-right: calc(-0.5 * var(--bs-gutter-x));
   margin-left: calc(-0.5 * var(--bs-gutter-x));
+}
+.cardnav {
+  padding-top: 50px;
+}
+
+.card {
+  background-color: var(--white-color);
+}
+.card-header {
+  background-color: var(--greynav-color);
+}
+.tab {
+  background-color: var(--white-color);
+}
+.card-header-tabs .nav-link.active {
+  background-color: var(--white-color);
+  border-bottom-color: var(--white-color);
 }
 
 @media only screen and (min-width: 1px) and (max-width: 900px) {

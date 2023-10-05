@@ -1,66 +1,65 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="dash-content">
-    <div class="overview">
-        <div class="title ">
-            <i class="uil uil-tachometer-fast-alt"></i>
-            <span class="text">Dashboard</span>
-        </div>
-        <div class="boxes">
-            <div class="box box1">
-                <i class="uil uil-file"></i>
-                <span class="text">Total Data Masuk</span>
-                <span class="number">{{ total_data_masuk }}</span>
-            </div>
-            <div class="box box2">
-                <i class="uil uil-file-download"></i>
-                <span class="text">Total Data Keluar</span>
-                <span class="number">{{ total_data_keluar }}</span>
-            </div>
-            <div class="box box3">
-                <i class="uil uil-history"></i>
-                <span class="text">Count New Recent Activity</span>
-                <span class="number">{{ count_new_recent_activity }}</span>
-            </div>
-        </div>
+{% extends "base.html" %} {% block content %}
+<div class="dash-content rounded-1">
+  <div class="overview">
+    <div class="title">
+      <i class="uil uil-tachometer-fast-alt"></i>
+      <span class="text">Dashboard</span>
     </div>
-    <div class="activity">
-        <div class="title">
-            <i class="uil uil-clock-three"></i>
-            <span class="text">Recent Activity</span>
-        </div>
-        <div class="table">
-            <table class="table">
-                <thead>
-                  <tr>
-                    <td>No</td>
-                    <td>Email</td>
-                    <td>Item name</td>
-                    <td>Lokasi</td>
-                    <td>Joined</td>
-                    <td>Type</td>
-                    <td>Status</td>
-                  </tr>
-                </thead>
-                <tbody>
-                    {% for activity in recent_activity %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ activity.nama }}</td>
-                        <td>{{ activity.device }}</td>
-                        <td>{{ activity.lokasi }}</td>
-                        <td>{{ activity.joined }}</td>
-                        {%if activity.type == 'Data Masuk'%}
-                        <td ><span class="badge bg-success">{{ activity.type }}</span></td>
-                        {% else %}
-                        <td ><span class="badge bg-danger">{{ activity.type }}</span></td>
-                        {% endif %}
-                        <td><span class="badge bg-success">{{ activity.status }}</span></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    <div class="boxes">
+      <div class="box box1">
+        <i class="uil uil-file"></i>
+        <span class="text">Total Data Masuk</span>
+        <span class="number">{{ total_data_masuk }}</span>
+      </div>
+      <div class="box box2">
+        <i class="uil uil-file-download"></i>
+        <span class="text">Total Data Keluar</span>
+        <span class="number">{{ total_data_keluar }}</span>
+      </div>
+      <div class="box box3">
+        <i class="uil uil-history"></i>
+        <span class="text">Count New Recent Activity</span>
+        <span class="number">{{ count_new_recent_activity }}</span>
+      </div>
     </div>
+  </div>
+  <div class="activity">
+    <div class="title">
+      <i class="uil uil-clock-three"></i>
+      <span class="text">Recent Activity</span>
+    </div>
+    <div class="table">
+      <table class="table">
+        <thead>
+          <tr>
+            <td>No</td>
+            <td>Email</td>
+            <td>Item name</td>
+            <td>Lokasi</td>
+            <td>Joined</td>
+            <td>Type</td>
+            <td>Status</td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for activity in recent_activity %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ activity.nama }}</td>
+            <td>{{ activity.device }}</td>
+            <td>{{ activity.lokasi }}</td>
+            <td>{{ activity.joined }}</td>
+            {%if activity.type == 'Data Masuk'%}
+            <td><span class="badge bg-success">{{ activity.type }}</span></td>
+            {% else %}
+            <td><span class="badge bg-danger">{{ activity.type }}</span></td>
+            {% endif %}
+            <td><span class="badge bg-success">{{ activity.status }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 {% endblock %}

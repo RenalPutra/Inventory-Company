@@ -48,9 +48,34 @@
           {% for d in kategori %}
           <option value="{{d.kategori}}">{{d.kategori}}</option>
           {% endfor %}
+          
         </select>
+        
       </form>
     </div>
+    <!-- <div class="col-auto">
+      <form
+        class="d-flex"
+        role="search"
+        method="post"
+        action="{% url 'tbdatabarang' %}"
+      >
+        {% csrf_token %}
+        <select
+          id="inputState"
+          class="form-control py-0 px-4 m-0"
+          name="lokasi"
+          onchange="this.form.submit()"
+        >
+          <option selected>Search Lokasi</option>
+          {% for k in lokasi %}
+          <option value="{{k.lokasi}}">{{k.lokasi}}</option>
+          {% endfor %}
+          
+        </select>
+        
+      </form>
+    </div> -->
   </div>
   <div class="row">
     <table class="table">
@@ -137,7 +162,7 @@
           <td>{{data.date}}</td>
           <td>{{ data.device }}</td>
           <td>{{data.user}}</td>
-          <td>{{data.email}}</td>
+          <td>{{data.lokasi}}</td>
           <td>{{data.pc}}</td>
           <td>{{data.os}}</td>
           <td>{{data.cpu}}</td>
@@ -188,7 +213,7 @@
           <td>{{data.date}}</td>
           <td>{{ data.device }}</td>
           <td>{{data.user}}</td>
-          <td>{{data.email}}</td>
+          <td>{{data.lokasi}}</td>
           <td>{{data.pc}}</td>
           <td>{{data.os}}</td>
           <td>{{data.cpu}}</td>

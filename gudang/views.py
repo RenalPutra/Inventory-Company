@@ -1,4 +1,5 @@
 import json
+from itertools import chain
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Kategori, BarangKeluar
@@ -176,7 +177,7 @@ def barangkeluar(request):
                     'date_masuk': existing_barang.date,
                     'device': existing_barang.device,
                     'user': existing_barang.user,
-                    'lokasi': existing_barang.lokasi,
+                    'lokasi': existing_barang.lokasi.lokasi,
                     'pc': existing_barang.pc,
                     'os': existing_barang.os,
                     'cpu': existing_barang.cpu,
@@ -362,14 +363,16 @@ def tbdatabarang(request):
     template_name = "tbdatabarang.html"
     barang = BarangMasuk.objects.all()
     kategori = Kategori.objects.all()
+   
     get_kategori = str(request.POST.get('kategori'))
+   
     get_search = request.POST.get('search')
-    print(get_search)
     search_category = BarangMasuk.objects.filter(
         kategori__kategori__contains=get_kategori)
+    
     if get_search:
 
-        queries = Q(date__icontains=get_search) | Q(device__icontains=get_search) | Q(user__icontains=get_search) | Q(email__icontains=get_search) | Q(pc__icontains=get_search) | Q(os__icontains=get_search) | Q(
+        queries = Q(date__icontains=get_search) | Q(device__icontains=get_search) | Q(user__icontains=get_search) | Q(pc__icontains=get_search) | Q(os__icontains=get_search) | Q(
             cpu__icontains=get_search) | Q(vga__icontains=get_search) | Q(ram__icontains=get_search) | Q(model__icontains=get_search) | Q(serialnumber__icontains=get_search) | Q(description__icontains=get_search)
 
         results = BarangMasuk.objects.filter(queries)
@@ -377,7 +380,8 @@ def tbdatabarang(request):
     elif get_kategori:
         results = BarangMasuk.objects.filter(
             kategori__kategori__contains=get_kategori)
-
+    
+  
     context = {
         'barang': barang,
         'kategori': kategori,
@@ -406,7 +410,7 @@ def tbriwayatdata(request):
         kategori__kategori__contains=get_kategori)
     if get_search:
 
-        queries = Q(date_masuk__icontains=get_search) | Q(date_keluar__icontains=get_search) | Q(device__icontains=get_search) | Q(user__icontains=get_search) | Q(email__icontains=get_search) | Q(pc__icontains=get_search) | Q(os__icontains=get_search) | Q(
+        queries = Q(date_masuk__icontains=get_search) | Q(date_keluar__icontains=get_search) | Q(device__icontains=get_search) | Q(user__icontains=get_search) | Q(pc__icontains=get_search) | Q(os__icontains=get_search) | Q(
             cpu__icontains=get_search) | Q(vga__icontains=get_search) | Q(ram__icontains=get_search) | Q(model__icontains=get_search) | Q(serialnumber__icontains=get_search) | Q(description__icontains=get_search)
 
         results = BarangKeluar.objects.filter(queries)
@@ -643,25 +647,48 @@ def delete_all_notifications(request):
     return JsonResponse({"error": "Invalid request method."}, status=400)
 
 
+# kategori 
 @login_required
 @user_passes_test(is_operator)
+
 def formkategory(request):
     template_name = "categoryForm.html"
     kategori = Kategori.objects.all()
+    data_barang_per_kategori = {}
 
     if request.method == 'POST':
         # Mengambil data dari input dengan name="kategori"
-        kategori = request.POST.get('kategori')
-        Kategori.objects.create(
-            kategori=kategori)
-        # Ganti dengan URL yang sesuai setelah berhasil input
+        kategori_input = request.POST.get('kategori')
+        # Membuat objek Kategori baru
+        Kategori.objects.create(kategori=kategori_input)
+        # Redirect ke halaman yang sesuai setelah berhasil input
         return redirect('kategory')
+    
+    for k in kategori:
+        # Dapatkan semua barang masuk dengan kategori yang sesuai
+        barangmasuk = BarangMasuk.objects.filter(kategori=k)
+        # Dapatkan semua barang keluar dengan kategori yang sesuai
+        barangkeluar = BarangKeluar.objects.filter(kategori=k)
+        
+        # Gabungkan data barang masuk dan barang keluar
+        data_barang = list(chain(barangmasuk, barangkeluar))
+        
+        # Tambahkan atribut status ke setiap barang
+        for barang in data_barang:
+            if barang in barangmasuk:
+                barang.status = "in"
+            else:
+                barang.status = "out"
+                
+        data_barang_per_kategori[k] = data_barang
+
+
     context = {
-        'kategori': kategori
-
+        'kategori': kategori,
+        'data_barang_per_kategori': data_barang_per_kategori
     }
-    return render(request, template_name, context)
 
+    return render(request, template_name, context)
 
 @login_required
 @user_passes_test(is_operator)

@@ -13,6 +13,7 @@ class Kategori(models.Model):
 
     class Meta:
         verbose_name_plural = "kategori"
+        
 class Lokasi(models.Model):
     lokasi = models.CharField(max_length=100)
 
