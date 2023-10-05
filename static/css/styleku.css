@@ -255,6 +255,9 @@ nav.close ~ .dashboard .top {
   background-color: #338ff2;
 }
 .boxes .box.box3 {
+  background-color: #a200ff;
+}
+.boxes .box.box4 {
   background-color: #ff4d4d;
 }
 .dash-content .activity .activity-data {

@@ -41,6 +41,8 @@ def analitic(request):
     # Menghitung total data masuk dan data keluar
     total_data_masuk = BarangMasuk.objects.count()
     total_data_keluar = BarangKeluar.objects.count()
+    total_all_in_barang = total_data_masuk + total_data_keluar
+    
 
     # Mengambil 5 recent activity data masuk dan data keluar terbaru
     recent_activity_masuk = BarangMasuk.objects.order_by('-date')[:5]
@@ -74,6 +76,7 @@ def analitic(request):
         'total_data_keluar': total_data_keluar,
         'count_new_recent_activity': len(recent_activity),
         'recent_activity': recent_activity,
+        'all_in_items' : total_all_in_barang,
     }
 
     return render(request, template_name, context)
@@ -695,6 +698,7 @@ def formkategory(request):
 def formlokasi(request):
     template_name = "lokasiTable.html"
     lokasi = Lokasi.objects.all()
+    data_barang_per_lokasi = {}
 
     if request.method == 'POST':
         # Mengambil data dari input dengan name="kategori"
@@ -703,8 +707,28 @@ def formlokasi(request):
             lokasi=lokasi)
         # Ganti dengan URL yang sesuai setelah berhasil input
         return redirect(formlokasi)
+    for l in lokasi:
+        # Dapatkan semua barang masuk dengan kategori yang sesuai
+        barangmasuk = BarangMasuk.objects.filter(lokasi=l)
+        # Dapatkan semua barang keluar dengan kategori yang sesuai
+        barangkeluar = BarangKeluar.objects.filter(lokasi=l)
+        
+        # Gabungkan data barang masuk dan barang keluar
+        data_barang = list(chain(barangmasuk, barangkeluar))
+        
+        # Tambahkan atribut status ke setiap barang
+        for barang in data_barang:
+            if barang in barangmasuk:
+                barang.status = "in"
+            else:
+                barang.status = "out"
+                
+        data_barang_per_lokasi[l] = data_barang
+        
+        
     context = {
-        'lokasi': lokasi
+        'lokasi': lokasi,
+        'data_barang_per_kategori': data_barang_per_lokasi
 
     }
     return render(request, template_name, context)
